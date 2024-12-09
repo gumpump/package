@@ -217,8 +217,6 @@ export class Point
 
 		if (i == -1)
 		{
-			console.log ("What the duck?");
-
 			return;
 		}
 
