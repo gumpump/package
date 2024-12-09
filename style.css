@@ -1,0 +1,46 @@
+body
+{
+    margin: 0;
+}
+
+nav
+{
+    width: 100vw;
+    height: 10%;
+    background-color: blue;
+}
+
+div#Middle
+{
+    display: flex;
+    width: 100vw;
+    height: 90%;
+}
+
+div#Left
+{
+    width: 10%;
+    height: 100%;
+    background-color: orange;
+}
+
+canvas
+{
+    width: 80%;
+    height: 100%;
+}
+
+div#Right
+{
+    width: 10%;
+    height: 100%;
+    background-color: violet;
+}
+
+div#Middle button
+{
+    width:90%;
+    height: 30px;
+    margin: 5px auto;
+    display:block
+}
