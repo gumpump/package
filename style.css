@@ -1,3 +1,10 @@
+:root
+{
+    --frame-background-color: beige;
+    --frame-size-border 3px;
+    --frame-color-border: silver;
+}
+
 body
 {
     margin: 0;
@@ -7,7 +14,8 @@ nav
 {
     width: 100vw;
     height: 10%;
-    background-color: blue;
+    border-bottom: var(--border-thickness) solid var(--frame-color-border);
+    background-color: var(--frame-background-color);
 }
 
 div#Middle
@@ -19,9 +27,10 @@ div#Middle
 
 div#Left
 {
-    width: 10%;
+    width: calc(10% - var(--border-thickness));
     height: 100%;
-    background-color: orange;
+    border-right: var(--border-thickness) solid var(--frame-color-border);;
+    background-color: var(--frame-background-color);
 }
 
 canvas
@@ -32,9 +41,10 @@ canvas
 
 div#Right
 {
-    width: 10%;
+    width: calc(10% - var(--border-thickness));
     height: 100%;
-    background-color: violet;
+    border-left: var(--border-thickness) solid var(--frame-color-border);
+    background-color: var(--frame-background-color);
 }
 
 div#Middle button
