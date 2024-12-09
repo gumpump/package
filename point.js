@@ -1,13 +1,28 @@
 export class Point
 {
+	// Makes sure everyone has an unique id
 	static idCounter = 1;
+
+	// Context for drawing on the canvas
 	static context = null;
+
+	// Dimensions of the canvas
 	static contextWidth = 0;
 	static contextHeight = 0;
+
+	// 3D-Array of all existing points
+	// [X-Axis][Y-Axis][Points]
 	static points = [];
+
+	// Currently selected point
+	// There can be only one
 	static currentPoint = 0;
+
+	// Show all points
+	// Only showing, not selecting
 	static show = false;
 
+	// Set context for all points to use
 	static setContext (ctx, w, h)
 	{
 		Point.context = ctx;
@@ -15,6 +30,7 @@ export class Point
 		Point.contextHeight = h;
 	}
 
+	// Helper for getting the index values for the points array
 	static getPointIndex (v, l)
 	{
 		const length = l / 8;
@@ -30,6 +46,7 @@ export class Point
 		return -1;
 	}
 
+	// Add a point to the array
 	static addPoint (p)
 	{
 		if (Point.points.length == 0)
@@ -52,6 +69,7 @@ export class Point
 		Point.points[targetX][targetY].push (p);
 	}
 
+	// Get the nearest point (if there is one in reach)
 	static getPoint (x, y, r)
 	{
 		var targetX = Point.getPointIndex (x, Point.contextWidth);
@@ -74,11 +92,13 @@ export class Point
 		return Point.points[targetX][targetY][0];
 	}
 
+	// Is any point selected?
 	static isSelected ()
 	{
 		return (Point.currentPoint == 0) ? false : true;
 	}
 
+	// Get the currently selected point (if there is one)
 	static getSelected ()
 	{
 		if (Point.currentPoint != 0)
@@ -100,23 +120,20 @@ export class Point
 		return null;
 	}
 
+	// Draw all points
 	static showAll ()
 	{
-		for (var x = 0; x < 8; x++)
-		{
-			for (var y = 0; y < 8; y++)
-			{
-				const r = Point.points[x][y].find ((p) => { console.log (p); });
-			}
-		}
 		Point.show = true;
 	}
 
+	// Draw the selected point only
 	static hideAll ()
 	{
 		Point.show = false;
 	}
 
+	// Unselect the current point
+	// TODO: Optimize this mess
 	static unselect ()
 	{
 		for (var x = 0; x < 8; x++)
@@ -136,6 +153,7 @@ export class Point
 		}
 	}
 
+	// Constructor of a single point
 	constructor (x, y)
 	{
 		this.x = x;
@@ -150,6 +168,7 @@ export class Point
 		Point.addPoint (this);
 	}
 
+	// Select this point
 	select ()
 	{
 		if (this.selected == false)
@@ -164,28 +183,34 @@ export class Point
 		}
 	}
 
+	// Unselect this point
 	unselect ()
 	{
 		this.selected = false;
 	}
 
+	// Move this point
+	// (Actually it just changes the color to visualize the movement)
 	move ()
 	{
 		this.color = "blue";
 	}
 
+	// Set new position
 	setPos (x, y)
 	{
 		this.x = x;
 		this.y = y;
 	}
 
+	// Set new position relative to old position
 	setRelPos (x, y)
 	{
 		this.x += x;
 		this.y += y;
 	}
 
+	// Update the point's position in the points array
 	update ()
 	{
 		const i = Point.points[this.arrayX][this.arrayY].indexOf (this);
@@ -207,16 +232,19 @@ export class Point
 		this.color = "yellow";
 	}
 
+	// Get the current position on the x-axis
 	getX ()
 	{
 		return this.x;
 	}
 
+	// Get the current position on the y-axis
 	getY ()
 	{
 		return this.y;
 	}
 
+	// Get the distance between the given coordinates and the point
 	getDistance (x, y)
 	{
 		this.distance = Math.hypot (x - this.x, y - this.y);
@@ -224,11 +252,13 @@ export class Point
 		return this.distance;
 	}
 
+	// Get the last calculated distance
 	getLastDistance ()
 	{
 		return this.distance;
 	}
 
+	// Draw the point (if selected)
 	draw ()
 	{
 		if (this.selected == false && Point.show == false)
