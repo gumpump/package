@@ -16,8 +16,9 @@ canvas.addEventListener ("mousedown", pointDown);
 canvas.addEventListener ("mouseup", pointUp);
 canvas.addEventListener ("mouseleave", pointUp);
 canvas.addEventListener ("mousemove", pointMove);
-canvas.width = canvas.getBoundingClientRect().width;
-canvas.height = canvas.getBoundingClientRect().height;
+const r = canvas.getBoundingClientRect ();
+canvas.width = r.width;
+canvas.height = r.height;
 const ctx = canvas.getContext ("2d");
 
 Grid.setContext (ctx, canvas.width, canvas.height);
