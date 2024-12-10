@@ -2,6 +2,9 @@ export class Grid
 {
 	// 1 => 1cm
 	static size = 1;
+	static spanX = 50;
+	static spanY = 50;
+
 	static context = null;
 	static grid = null;
 	static gridContext = null;
@@ -24,11 +27,26 @@ export class Grid
 		Grid.update ();
 	}
 
+	static getSize ()
+	{
+		return Grid.size;
+	}
+
+	static getSpanX ()
+	{
+		return Grid.spanX;
+	}
+
+	static getSpanY ()
+	{
+		return Grid.spanY;
+	}
+
 	static update ()
 	{
 		Grid.gridContext.clearRect (0, 0, Grid.grid.width, Grid.grid.height);
 
-		for (var x = 50; x < Grid.grid.width; x += 50)
+		for (var x = Grid.spanX; x < Grid.grid.width; x += Grid.spanX)
 		{
 			Grid.gridContext.beginPath ();
 			Grid.gridContext.strokeStyle = "lightgray";
@@ -37,7 +55,7 @@ export class Grid
 			Grid.gridContext.stroke ();
 		}
 
-		for (var y = 50; y < Grid.grid.height; y += 50)
+		for (var y = Grid.spanY; y < Grid.grid.height; y += Grid.spanY)
 		{
 			Grid.gridContext.beginPath ();
 			Grid.gridContext.strokeStyle = "lightgray";
