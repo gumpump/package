@@ -75,7 +75,7 @@ export class Point
 		var targetX = Point.getPointIndex (x, Point.contextWidth);
 		var targetY = Point.getPointIndex (y, Point.contextHeight);
 
-		Point.points[targetX][targetY].sort ((a, b) => { a.getDistance (x, y) - b.getDistance (x, y); });
+		Point.points[targetX][targetY].sort ((a, b) => { b.getDistance (x, y) - a.getDistance (x, y); });
 
 		const p = Point.points[targetX][targetY][0];
 
