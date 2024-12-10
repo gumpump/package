@@ -14,6 +14,7 @@ const canvas = document.getElementsByTagName ("canvas")[0];
 canvas.addEventListener ("click", pointClick);
 canvas.addEventListener ("mousedown", pointDown);
 canvas.addEventListener ("mouseup", pointUp);
+canvas.addEventListener ("mouseleave", pointUp);
 canvas.addEventListener ("mousemove", pointMove);
 canvas.width = canvas.getBoundingClientRect().width;
 canvas.height = canvas.getBoundingClientRect().height;
@@ -24,6 +25,10 @@ Grid.setContext (ctx, canvas.width, canvas.height);
 var l = [];
 Point.setContext (ctx, canvas.width, canvas.height);
 l.push (new Line (ctx, new Point (50, 50), new Point (500, 500)));
+
+const hTextPoints = document.getElementById ("Points");
+hTextPoints.innerText = Point.getNumPoints().toString ();
+
 var down = false;
 
 function animate ()
@@ -46,6 +51,8 @@ function buttonAdd (event)
 		const offX = (pX + 50 > canvas.width) ? -50 : 50;
 		const offY = (pY + 50 > canvas.height) ? -50 : 50;
 		l.push (new Line (ctx, p, new Point (pX + offX, pY + offY)));
+
+		hTextPoints.innerText = Point.getNumPoints().toString ();
 	}
 }
 
@@ -61,7 +68,7 @@ function hideAll (event)
 
 function pointClick (event)
 {
-	const p = Point.getPoint (event.offsetX, event.offsetY, 15);
+	const p = Point.getPointByPos (event.offsetX, event.offsetY, 15);
 
 	if (p != null)
 	{
@@ -104,6 +111,9 @@ function pointUp (event)
 	}
 
 	down = false;
+
+	l.forEach ((x, i) => { x.update (); })
+	hTextPoints.innerText = Point.getNumPoints().toString ();
 }
 
 function pointMove (event)
