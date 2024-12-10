@@ -153,11 +153,17 @@ export class Point
 		}
 	}
 
+	/////////////////////////////////////////
+	// BEGINNING OF THE INSTANCEABLE CLASS //
+	/////////////////////////////////////////
+
 	// Constructor of a single point
 	constructor (x, y)
 	{
 		this.x = x;
 		this.y = y;
+		this.drawX = x;
+		this.drawY = y;
 		this.arrayX = Point.getPointIndex (x, Point.contextWidth);
 		this.arrayY = Point.getPointIndex (y, Point.contextHeight);
 		this.distance = -1;
@@ -210,9 +216,17 @@ export class Point
 		this.y += y;
 	}
 
+	setSnappedPos ()
+	{
+		this.x = this.drawX;
+		this.y = this.drawY;
+	}
+
 	// Update the point's position in the points array
 	update ()
 	{
+		this.setSnappedPos ();
+
 		const i = Point.points[this.arrayX][this.arrayY].indexOf (this);
 
 		if (i == -1)
@@ -236,10 +250,20 @@ export class Point
 		return this.x;
 	}
 
+	getDrawnX ()
+	{
+		return this.drawX;
+	}
+
 	// Get the current position on the y-axis
 	getY ()
 	{
 		return this.y;
+	}
+
+	getDrawnY ()
+	{
+		return this.drawY;
 	}
 
 	// Get the distance between the given coordinates and the point
@@ -259,13 +283,46 @@ export class Point
 	// Draw the point (if selected)
 	draw ()
 	{
+		var restX = this.x % 50;
+		var restY = this.y % 50;
+
+		if (restX < 10)
+		{
+			this.drawX = this.x - restX;
+		}
+
+		else if (restX > 40)
+		{
+			this.drawX = this.x + (50 - restX);
+		}
+
+		else
+		{
+			this.drawX = this.x;
+		}
+
+		if (restY < 10)
+		{
+			this.drawY = this.y - restY;
+		}
+
+		else if (restY > 40)
+		{
+			this.drawY = this.y + (50 - restY);
+		}
+
+		else
+		{
+			this.drawY = this.y;
+		}
+
 		if (this.selected == false && Point.show == false)
 		{
 			return;
 		}
 
 		Point.context.beginPath ();
-		Point.context.arc (this.x, this.y,
+		Point.context.arc (this.drawX, this.drawY,
 						  10, 0, 2 * Math.PI);
 		Point.context.fillStyle = this.color;
 		Point.context.fill ();

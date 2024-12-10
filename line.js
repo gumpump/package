@@ -37,8 +37,8 @@ export class Line
 		this.end.draw ();
 
 		this.context.beginPath ();
-		this.context.moveTo (this.start.getX (), this.start.getY ());
-		this.context.lineTo (this.end.getX (), this.end.getY ());
+		this.context.moveTo (this.start.getDrawnX (), this.start.getDrawnY ());
+		this.context.lineTo (this.end.getDrawnX (), this.end.getDrawnY ());
 		this.context.stroke ();
 	}
 }
