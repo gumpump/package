@@ -3,6 +3,8 @@ export class Point
 	// Makes sure everyone has an unique id
 	static idCounter = 1;
 
+	static numPoints = 0;
+
 	// Context for drawing on the canvas
 	static context = null;
 
@@ -52,13 +54,14 @@ export class Point
 		if (Point.points.length == 0)
 		{
 			Point.points = new Array (8);
-			for (var i = 0; i < 8; i++)
-			{
-				Point.points[i] = new Array (8);
 
-				for (var j = 0; j < 8; j++)
+			for (var x = 0; x < 8; x++)
+			{
+				Point.points[x] = new Array (8);
+
+				for (var y = 0; y < 8; y++)
 				{
-					Point.points[i][j] = [];
+					Point.points[x][y] = [];
 				}
 			}
 		}
@@ -67,10 +70,34 @@ export class Point
 		var targetY = Point.getPointIndex (p.getY (), Point.contextHeight);
 
 		Point.points[targetX][targetY].push (p);
+		Point.numPoints++;
+	}
+
+	static removePoint (p)
+	{
+		for (var x = 0; x < 8; x++)
+		{
+			for (var y = 0; y < 8; y++)
+			{
+				const i = Point.points[x][y].indexOf (p);
+
+				if (i != -1)
+				{
+					Point.points[x][y].splice (i, 0);
+					Point.numPoints--;
+
+					return;
+				}
+			}
+		}
+	}
+	static getNumPoints ()
+	{
+		return Point.numPoints;
 	}
 
 	// Get the nearest point (if there is one in reach)
-	static getPoint (x, y, r)
+	static getPointByPos (x, y, r)
 	{
 		var targetX = Point.getPointIndex (x, Point.contextWidth);
 		var targetY = Point.getPointIndex (y, Point.contextHeight);
@@ -90,6 +117,25 @@ export class Point
 		}
 
 		return Point.points[targetX][targetY][0];
+	}
+
+	static getPointById (id)
+	{
+		for (var x = 0; x < 8; x++)
+		{
+			for (var y = 0; y < 8; y++)
+			{
+				for (var i = 0; i < Point.points[x][y].length; i++)
+				{
+					if (Point.points[x][y][i].id == id)
+					{
+						return Point.points[x][y][i];
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 
 	// Is any point selected?
@@ -170,6 +216,7 @@ export class Point
 		this.selected = false;
 		this.color = "yellow";
 		this.id = Point.idCounter;
+		this.newId = this.id;
 		Point.idCounter++;
 		Point.addPoint (this);
 	}
@@ -220,6 +267,23 @@ export class Point
 	{
 		this.x = this.drawX;
 		this.y = this.drawY;
+
+		const p = Point.getPointByPos (this.x, this.y, 0);
+
+		if (p == null)
+		{
+			return;
+		}
+
+		if (p.getId () == this.id)
+		{
+			return;
+		}
+
+		if (p.getX () == this.x && p.getY () == this.y)
+		{
+			p.setNewId (this.id);
+		}
 	}
 
 	// Update the point's position in the points array
@@ -278,6 +342,26 @@ export class Point
 	getLastDistance ()
 	{
 		return this.distance;
+	}
+
+	getId ()
+	{
+		return this.id;
+	}
+
+	setNewId (id)
+	{
+		this.newId = id;
+	}
+
+	getNewId ()
+	{
+		return this.newId;
+	}
+
+	isDeprecated ()
+	{
+		return (this.id != this.newId) ? true : false;
 	}
 
 	// Draw the point (if selected)

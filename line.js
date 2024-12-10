@@ -12,14 +12,24 @@ export class Line
 		this.next = null;
 	}
 
+	setStartPoint (p)
+	{
+		this.start = p;
+	}
+
 	// Set position of start point
-	setStart (x, y)
+	setStartPointPos (x, y)
 	{
 		this.start.setPos (x, y);
 	}
 
+	setEndPoint (p)
+	{
+		this.end = p;
+	}
+
 	// Set position of end point
-	setEnd (x, y)
+	setEndPointPos (x, y)
 	{
 		this.end.setPos (x, y);
 	}
@@ -28,6 +38,23 @@ export class Line
 	getLength ()
 	{
 		return Math.hypot (this.end.getX () - this.start.getX (), this.end.getY () - this.start.getY ());
+	}
+
+	update ()
+	{
+		if (this.start.isDeprecated () == true)
+		{
+			const id = this.start.getNewId ();
+			Point.removePoint (this.start);
+			this.start = Point.getPointById (id);
+		}
+
+		if (this.end.isDeprecated () == true)
+		{
+			const id = this.end.getNewId ();
+			Point.removePoint (this.end);
+			this.end = Point.getPointById (id);
+		}
 	}
 
 	// Draw the line
