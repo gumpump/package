@@ -1,3 +1,5 @@
+import { Grid } from "./grid.js"
+
 export class Point
 {
 	// Makes sure everyone has an unique id
@@ -367,17 +369,20 @@ export class Point
 	// Draw the point (if selected)
 	draw ()
 	{
-		var restX = this.x % 50;
-		var restY = this.y % 50;
+		const spanX = Grid.getSpanX ();
+		const spanY = Grid.getSpanY ();
 
-		if (restX < 10)
+		var restX = this.x % spanX;
+		var restY = this.y % spanY;
+
+		if (restX < spanX * 0.2)
 		{
 			this.drawX = this.x - restX;
 		}
 
-		else if (restX > 40)
+		else if (restX > spanX * 0.8)
 		{
-			this.drawX = this.x + (50 - restX);
+			this.drawX = this.x + (spanX - restX);
 		}
 
 		else
@@ -385,14 +390,14 @@ export class Point
 			this.drawX = this.x;
 		}
 
-		if (restY < 10)
+		if (restY < spanY * 0.2)
 		{
 			this.drawY = this.y - restY;
 		}
 
-		else if (restY > 40)
+		else if (restY > spanY * 0.8)
 		{
-			this.drawY = this.y + (50 - restY);
+			this.drawY = this.y + (spanY - restY);
 		}
 
 		else
@@ -406,10 +411,15 @@ export class Point
 		}
 
 		Point.context.beginPath ();
-		Point.context.arc (this.drawX, this.drawY,
-						  10, 0, 2 * Math.PI);
+		Point.context.arc (this.drawX, this.drawY, 10, 0, 2 * Math.PI);
 		Point.context.fillStyle = this.color;
 		Point.context.fill ();
 		Point.context.stroke ();
+
+		Point.context.fillStyle = "black";
+		Point.context.font = "24px sanserif";
+		Point.context.fillText (((this.drawX / Grid.getSpanX ()) * Grid.getSize ()).toString () + ", "
+								+ ((this.drawY / Grid.getSpanY ()) * Grid.getSize ()).toString (),
+								this.drawX + 20, this.drawY + 5);
 	}
 }
