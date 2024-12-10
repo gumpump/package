@@ -1,3 +1,4 @@
+import { Grid } from "./grid.js"
 import { Point } from "./point.js"
 import { Line } from "./line.js"
 
@@ -18,6 +19,8 @@ canvas.width = canvas.getBoundingClientRect().width;
 canvas.height = canvas.getBoundingClientRect().height;
 const ctx = canvas.getContext ("2d");
 
+Grid.setContext (ctx, canvas.width, canvas.height);
+
 var l = [];
 Point.setContext (ctx, canvas.width, canvas.height);
 l.push (new Line (ctx, new Point (50, 50), new Point (500, 500)));
@@ -27,6 +30,7 @@ function animate ()
 {
 	requestAnimationFrame (animate);
 	ctx.clearRect (0, 0, canvas.width, canvas.height);
+	Grid.draw ();
 	l.forEach ((x, i) => { x.draw (); })
 }
 
