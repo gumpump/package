@@ -1,7 +1,7 @@
 :root
 {
     --frame-background-color: beige;
-    --frame-size-border 3px;
+    --frame-size-border: 3px;
     --frame-color-border: silver;
 }
 
@@ -14,7 +14,7 @@ nav
 {
     width: 100vw;
     height: 10%;
-    border-bottom: var(--border-thickness) solid var(--frame-color-border);
+    border-bottom: var(--frame-size-border) solid var(--frame-color-border);
     background-color: var(--frame-background-color);
 }
 
@@ -27,9 +27,9 @@ div#Middle
 
 div#Left
 {
-    width: calc(10% - var(--border-thickness));
+    width: calc(10% - var(--frame-size-border));
     height: 100%;
-    border-right: var(--border-thickness) solid var(--frame-color-border);;
+    border-right: var(--frame-size-border) solid var(--frame-color-border);;
     background-color: var(--frame-background-color);
 }
 
@@ -41,9 +41,9 @@ canvas
 
 div#Right
 {
-    width: calc(10% - var(--border-thickness));
+    width: calc(10% - var(--frame-size-border));
     height: 100%;
-    border-left: var(--border-thickness) solid var(--frame-color-border);
+    border-left: var(--frame-size-border) solid var(--frame-color-border);
     background-color: var(--frame-background-color);
 }
 
