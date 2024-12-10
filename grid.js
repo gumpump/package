@@ -2,13 +2,21 @@ export class Grid
 {
 	// 1 => 1cm
 	static size = 1;
+
+	// Span between grid lines
 	static spanX = 50;
 	static spanY = 50;
 
+	// Context of the main canvas
 	static context = null;
+
+	// Canvas containing the grid
 	static grid = null;
+
+	// Context of the grid canvas
 	static gridContext = null;
 
+	// Set main context and its dimensions
 	static setContext (ctx, w, h)
 	{
 		Grid.context = ctx;
@@ -20,6 +28,8 @@ export class Grid
 		Grid.update ();
 	}
 
+	// Set the real life dimension of one span
+	// 1 => 1cm
 	static setSize (s)
 	{
 		Grid.size = s;
@@ -27,21 +37,26 @@ export class Grid
 		Grid.update ();
 	}
 
+	// Get the real life dimension of one span
+	// 1 => 1cm
 	static getSize ()
 	{
 		return Grid.size;
 	}
 
+	// Get the span size on the x-axis (in pixel)
 	static getSpanX ()
 	{
 		return Grid.spanX;
 	}
 
+	// Get the span size on the y-axis (in pixel)
 	static getSpanY ()
 	{
 		return Grid.spanY;
 	}
 
+	// (Re-)Create the grid canvas once its settings have changed
 	static update ()
 	{
 		Grid.gridContext.clearRect (0, 0, Grid.grid.width, Grid.grid.height);
@@ -65,6 +80,7 @@ export class Grid
 		}
 	}
 
+	// Draw the grid canvas on the main canvas
 	static draw ()
 	{
 		Grid.context.drawImage (Grid.grid, 0, 0);

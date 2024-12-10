@@ -5,13 +5,17 @@ export class Line
 	// Constructor
 	constructor (ctx, pointStart, pointEnd)
 	{
+		// Start point
 		this.start = pointStart;
+
+		// End point
 		this.end = pointEnd;
+
+		// Main context
 		this.context = ctx;
-		this.previous = null;
-		this.next = null;
 	}
 
+	// Set start point (actual reference to a new or existing point)
 	setStartPoint (p)
 	{
 		this.start = p;
@@ -23,6 +27,7 @@ export class Line
 		this.start.setPos (x, y);
 	}
 
+	// Set end point (actual reference to a new or existing point)
 	setEndPoint (p)
 	{
 		this.end = p;
@@ -40,6 +45,7 @@ export class Line
 		return Math.hypot (this.end.getX () - this.start.getX (), this.end.getY () - this.start.getY ());
 	}
 
+	// Check if one of the points has been deprecated and have to be removed
 	update ()
 	{
 		if (this.start.isDeprecated () == true)

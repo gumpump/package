@@ -5,6 +5,7 @@ export class Point
 	// Makes sure everyone has an unique id
 	static idCounter = 1;
 
+	// Number of currently existing points
 	static numPoints = 0;
 
 	// Context for drawing on the canvas
@@ -75,6 +76,7 @@ export class Point
 		Point.numPoints++;
 	}
 
+	// Remove a point out of the array
 	static removePoint (p)
 	{
 		for (var x = 0; x < 8; x++)
@@ -93,6 +95,8 @@ export class Point
 			}
 		}
 	}
+
+	// Get the number of currently existing points
 	static getNumPoints ()
 	{
 		return Point.numPoints;
@@ -121,6 +125,7 @@ export class Point
 		return Point.points[targetX][targetY][0];
 	}
 
+	// Get point by its ID
 	static getPointById (id)
 	{
 		for (var x = 0; x < 8; x++)
@@ -208,17 +213,34 @@ export class Point
 	// Constructor of a single point
 	constructor (x, y)
 	{
+		// Currently accepted coordinates
 		this.x = x;
 		this.y = y;
+
+		// Current coordinates on the screen (while moving)
 		this.drawX = x;
 		this.drawY = y;
+
+		// Own indices for the 3D-point-array
+		// Only for the first two dimensions, the third one is determined by its distance to the mouse
 		this.arrayX = Point.getPointIndex (x, Point.contextWidth);
 		this.arrayY = Point.getPointIndex (y, Point.contextHeight);
+
+		// Last measured distance to given coordinates
 		this.distance = -1;
+
+		// Is the point selected?
 		this.selected = false;
+
+		// Color to use when the point is drawn
 		this.color = "yellow";
+
+		// Own unique id (should be unique)
 		this.id = Point.idCounter;
+
+		// If deprecated, replace with the point owning this id
 		this.newId = this.id;
+
 		Point.idCounter++;
 		Point.addPoint (this);
 	}
@@ -265,6 +287,7 @@ export class Point
 		this.y += y;
 	}
 
+	// Accept the current coordinates used for drawing as official ones
 	setSnappedPos ()
 	{
 		this.x = this.drawX;
@@ -310,23 +333,25 @@ export class Point
 		this.color = "yellow";
 	}
 
-	// Get the current position on the x-axis
+	// Get the currently accepted position on the x-axis
 	getX ()
 	{
 		return this.x;
 	}
 
+	// Get the current position on the x-axis used for drawing
 	getDrawnX ()
 	{
 		return this.drawX;
 	}
 
-	// Get the current position on the y-axis
+	// Get the currently accepted position on the y-axis
 	getY ()
 	{
 		return this.y;
 	}
 
+	// Get the current position on the y-axis used for drawing
 	getDrawnY ()
 	{
 		return this.drawY;
@@ -346,21 +371,27 @@ export class Point
 		return this.distance;
 	}
 
+	// Get the id of the point
 	getId ()
 	{
 		return this.id;
 	}
 
+	// Set the new id
+	// As soon as newId is set to something different than the own id, the point is seen as deprecated
 	setNewId (id)
 	{
 		this.newId = id;
 	}
 
+	// Get the new id
+	// If the new id does not match the id given to the point, the point is seen as deprecated
 	getNewId ()
 	{
 		return this.newId;
 	}
 
+	// Is the point deprecated or not?
 	isDeprecated ()
 	{
 		return (this.id != this.newId) ? true : false;
