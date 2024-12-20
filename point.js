@@ -74,6 +74,9 @@ export class Point
 
 		Point.points[targetX][targetY].push (p);
 		Point.numPoints++;
+
+		console.log ("Point added");
+		console.log ("There are " + Point.numPoints + " points");
 	}
 
 	// Remove a point out of the array
@@ -87,8 +90,10 @@ export class Point
 
 				if (i != -1)
 				{
-					Point.points[x][y].splice (i, 0);
+					Point.points[x][y].splice (i, 1);
 					Point.numPoints--;
+
+					console.log ("Point removed");
 
 					return;
 				}
@@ -108,21 +113,61 @@ export class Point
 		var targetX = Point.getPointIndex (x, Point.contextWidth);
 		var targetY = Point.getPointIndex (y, Point.contextHeight);
 
-		Point.points[targetX][targetY].sort ((a, b) => { b.getDistance (x, y) - a.getDistance (x, y); });
+		const p = Point.getNearestPoint (x, y, targetX, targetY);
 
-		const p = Point.points[targetX][targetY][0];
-
-		if (p == undefined)
+		if (p == null)
 		{
+			console.log ("Could not get point");
 			return null;
 		}
 
 		if (p.getDistance (x, y) > r)
 		{
+			console.log ("Measured distance: " + p.getDistance (x, y));
+			console.log ("Given radius: " + r);
 			return null;
 		}
 
 		return Point.points[targetX][targetY][0];
+	}
+
+	static getNearestPoint (x, y, iX, iY)
+	{
+		const l = Point.points[iX][iY].length;
+		console.log (l);
+
+		if (l == 0)
+		{
+			return null;
+		}
+
+		var p = null;
+
+		for (var i = 0; i < l; i++)
+		{
+			console.log ("Point " + i);
+
+			if (p == null)
+			{
+				p = Point.points[iX][iY][i];
+				console.log ("Distance: " + p.getDistance (x, y));
+				continue;
+			}
+
+			console.log ("Old distance: " + p.getDistance (x, y));
+			console.log ("New distance: " + Point.points[iX][iY][i].getDistance (x, y));
+
+			if (p.getDistance (x, y) > Point.points[iX][iY][i].getDistance (x, y))
+			{
+				console.log ("New distance won");
+				p = Point.points[iX][iY][i];
+				continue;
+			}
+		}
+
+		console.log ("Returned point has the following distance: " + p.getDistance (x, y));
+
+		return p;
 	}
 
 	// Get point by its ID
@@ -449,8 +494,11 @@ export class Point
 
 		Point.context.fillStyle = "black";
 		Point.context.font = "24px sanserif";
+		Point.context.fillText (this.drawX + ", " + this.drawY, this.drawX + 20, this.drawY + 5);
+/*
 		Point.context.fillText (((this.drawX / Grid.getSpanX ()) * Grid.getSize ()).toString () + ", "
 								+ ((this.drawY / Grid.getSpanY ()) * Grid.getSize ()).toString (),
 								this.drawX + 20, this.drawY + 5);
+*/
 	}
 }
