@@ -4,13 +4,21 @@
 	</head>
 	<body>
 	<div>
-		<nav><span id="Points"></span> points</nav>
+		<nav>
+			<div><span id="Points"></span> points</div>
+			<button id="Show">Show all</button>
+		</nav>
 		<div id="Middle">
-			<div id="Left">Left</div>
+			<div id="Left">
+				<div class="Sidebar_Upper">
+					<button id="Line">Add line</button>
+					<button id="Rect">Add rectangle</button>
+				</div>
+				<button id="Clear">Clear</button>
+			</div>
 			<canvas></canvas>
 			<div id="Right">
-				<button id="Add">Add line</button>
-				<button id="Show">Show all</button>
+				Right
 			</div>
 		</div>
 	</div>
