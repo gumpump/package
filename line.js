@@ -10,6 +10,8 @@ export class Line
 
 	static lines = [];
 
+	static pointIds = [];
+
 	// Set context for all lines to use
 	static setContext (ctx)
 	{
@@ -19,6 +21,30 @@ export class Line
 	static addLine (l)
 	{
 		Line.lines.push (l);
+
+		const startId = l.start.getId ();
+
+		if (Line.pointIds.includes (startId) == false)
+		{
+			Line.pointIds.push (startId);
+		}
+
+		else
+		{
+			console.log ("Potential area detected");
+		}
+
+		const endId = l.end.getId ();
+
+		if (Line.pointIds.includes (endId) == false)
+		{
+			Line.pointIds.push (endId);
+		}
+
+		else
+		{
+			console.log ("Potential area detected");
+		}
 	}
 
 	static removeLine (l)
@@ -41,7 +67,11 @@ export class Line
 			return;
 		}
 
-		for (var i = 0; i < l; i++)
+		// While going through the array, some lines may remove themselves.
+		// The iterator goes on, even though it may goes beyond the new boundaries
+		// Cheap fix: Use Line.lines.length instead of l
+		// TODO: Find another way to cycle through this array
+		for (var i = 0; i < Line.lines.length; i++)
 		{
 			Line.lines[i].update ();
 		}
