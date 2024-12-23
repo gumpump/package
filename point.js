@@ -146,6 +146,11 @@ export class Point
 		var targetX = Point.getPointIndex (x, Point.contextWidth);
 		var targetY = Point.getPointIndex (y, Point.contextHeight);
 
+		if (Point.coordinateSystem.length == 0)
+		{
+			return null;
+		}
+
 		const l = Point.coordinateSystem[targetX][targetY].length;
 
 		if (l == 0)
