@@ -47,6 +47,12 @@ div#Right
     background-color: var(--frame-background-color);
 }
 
+div.Sidebar_Upper
+{
+    width: 100%;
+    height: 50%;
+}
+
 div#Middle button
 {
     width:90%;
