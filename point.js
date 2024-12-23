@@ -158,6 +158,7 @@ export class Point
 		if (p == null)
 		{
 			console.log ("Could not get point");
+
 			return null;
 		}
 
@@ -165,10 +166,11 @@ export class Point
 		{
 			console.log ("Measured distance: " + p.getDistance (x, y));
 			console.log ("Given radius: " + r);
+
 			return null;
 		}
 
-		return Point.coordinateSystem[targetX][targetY][0];
+		return p;
 	}
 
 	// Get point by its ID
@@ -206,7 +208,11 @@ export class Point
 	// Unselect the current point
 	static unselect ()
 	{
-		Point.currentPoint = null;
+		if (Point.currentPoint != null)
+		{
+			Point.currentPoint.unselect ();
+			Point.currentPoint = null;
+		}
 	}
 
 	/////////////////////////////////////////
