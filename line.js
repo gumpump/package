@@ -2,6 +2,70 @@ import { Point } from "./point.js"
 
 export class Line
 {
+	// Makes sure everyone has an unique id
+	static idCounter = 1;
+
+	// Context for drawing on the canvas
+	static context = null;
+
+	static lines = [];
+
+	// Set context for all lines to use
+	static setContext (ctx)
+	{
+		Line.context = ctx;
+	}
+
+	static addLine (l)
+	{
+		Line.lines.push (l);
+	}
+
+	static removeLine (l)
+	{
+		const i = Line.lines.indexOf (l);
+
+		if (i != -1)
+		{
+			Line.lines.splice (i, 1);
+			console.log ("Line removed");
+		}
+	}
+
+	static update ()
+	{
+		const l = Line.lines.length;
+
+		if (l == 0)
+		{
+			return;
+		}
+
+		for (var i = 0; i < l; i++)
+		{
+			Line.lines[i].update ();
+		}
+	}
+
+	static draw ()
+	{
+		const l = Line.lines.length;
+
+		if (l == 0)
+		{
+			return;
+		}
+
+		for (var i = 0; i < l; i++)
+		{
+			Line.lines[i].draw ();
+		}
+	}
+
+	/////////////////////////////////////////
+	// BEGINNING OF THE INSTANCEABLE CLASS //
+	/////////////////////////////////////////
+
 	// Constructor
 	constructor (ctx, pointStart, pointEnd)
 	{
@@ -50,25 +114,40 @@ export class Line
 	{
 		if (this.start.isDeprecated () == true)
 		{
-			const id = this.start.getNewId ();
+			const idStart = this.start.getNewId ();
 			Point.removePoint (this.start);
-			this.start = Point.getPointById (id);
+			this.start = null;
+
+			if (idStart == -1)
+			{
+				Line.removeLine (this);
+
+				return;
+			}
+
+			this.start = Point.getPointById (idStart);
 		}
 
 		if (this.end.isDeprecated () == true)
 		{
-			const id = this.end.getNewId ();
+			const idEnd = this.end.getNewId ();
 			Point.removePoint (this.end);
-			this.end = Point.getPointById (id);
+			this.end = null;
+
+			if (idEnd == -1)
+			{
+				Line.removeLine (this);
+
+				return;
+			}
+
+			this.end = Point.getPointById (idEnd);
 		}
 	}
 
 	// Draw the line
 	draw ()
 	{
-		this.start.draw ();
-		this.end.draw ();
-
 		this.context.beginPath ();
 		this.context.moveTo (this.start.getDrawnX (), this.start.getDrawnY ());
 		this.context.lineTo (this.end.getDrawnX (), this.end.getDrawnY ());
