@@ -10,6 +10,12 @@ body
     margin: 0;
 }
 
+p.DebugMessage
+{
+    font-size: 0.5rem;
+    padding: 5px;
+}
+
 nav
 {
     width: 100vw;
