@@ -21,3 +21,8 @@ At first I wanted to use C, but with it I would have to build the GUI with an ad
  - Export to image or even pdf
  - Interactive input fields for changing resolution of grid
  - Toggling grid on and off
+
+ ## Known bugs
+ - If you move multiple nodes at once over multiple other nodes to merge them, they are all gone and it messes up the internal nodes list.
+ The counter shows more nodes than you can see on the canvas and the "Show all"-button doesn't work.
+ - If you move multiple nodes at once they snap to the grid differently so their surface become "corrupted".
