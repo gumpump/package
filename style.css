@@ -13,6 +13,14 @@ body
 p.DebugMessage
 {
     font-size: 0.5rem;
+    margin: 0px;
+    padding: 5px;
+}
+
+p.InfoMessage
+{
+    font-size: 0.8rem;
+    margin: 0px;
     padding: 5px;
 }
 
