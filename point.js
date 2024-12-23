@@ -5,9 +5,6 @@ export class Point
 	// Makes sure everyone has an unique id
 	static idCounter = 1;
 
-	// Number of currently existing points
-	static numPoints = 0;
-
 	// Context for drawing on the canvas
 	static context = null;
 
@@ -15,13 +12,16 @@ export class Point
 	static contextWidth = 0;
 	static contextHeight = 0;
 
+	// All points sorted by id
+	static points = [];
+
 	// 3D-Array of all existing points
 	// [X-Axis][Y-Axis][Points]
-	static points = [];
+	static coordinateSystem = [];
 
 	// Currently selected point
 	// There can be only one
-	static currentPoint = 0;
+	static currentPoint = null;
 
 	// Show all points
 	// Only showing, not selecting
@@ -33,6 +33,21 @@ export class Point
 		Point.context = ctx;
 		Point.contextWidth = w;
 		Point.contextHeight = h;
+	}
+
+	static createCoordinateSystem ()
+	{
+		Point.coordinateSystem = new Array (8);
+
+		for (var x = 0; x < 8; x++)
+		{
+			Point.coordinateSystem[x] = new Array (8);
+
+			for (var y = 0; y < 8; y++)
+			{
+				Point.coordinateSystem[x][y] = [];
+			}
+		}
 	}
 
 	// Helper for getting the index values for the points array
@@ -54,57 +69,49 @@ export class Point
 	// Add a point to the array
 	static addPoint (p)
 	{
-		if (Point.points.length == 0)
+		Point.points.push (p);
+
+		if (Point.coordinateSystem.length == 0)
 		{
-			Point.points = new Array (8);
-
-			for (var x = 0; x < 8; x++)
-			{
-				Point.points[x] = new Array (8);
-
-				for (var y = 0; y < 8; y++)
-				{
-					Point.points[x][y] = [];
-				}
-			}
+			Point.createCoordinateSystem ();
 		}
 
 		var targetX = Point.getPointIndex (p.getX (), Point.contextWidth);
 		var targetY = Point.getPointIndex (p.getY (), Point.contextHeight);
 
-		Point.points[targetX][targetY].push (p);
-		Point.numPoints++;
+		Point.coordinateSystem[targetX][targetY].push (p);
 
 		console.log ("Point added");
-		console.log ("There are " + Point.numPoints + " points");
+		console.log ("There are " + Point.points.length + " points");
 	}
 
 	// Remove a point out of the array
 	static removePoint (p)
 	{
-		for (var x = 0; x < 8; x++)
+		const i = Point.points.indexOf (p);
+		Point.points.splice (i, 1);
+
+		const targetX = p.getCoordX ();
+		const targetY = p.getCoordY ();
+		const j = Point.coordinateSystem[targetX][targetY].indexOf (p);
+
+		if (j != -1)
 		{
-			for (var y = 0; y < 8; y++)
+			Point.coordinateSystem[targetX][targetY].splice (j, 1);
+
+			if (i != -1)
 			{
-				const i = Point.points[x][y].indexOf (p);
-
-				if (i != -1)
-				{
-					Point.points[x][y].splice (i, 1);
-					Point.numPoints--;
-
-					console.log ("Point removed");
-
-					return;
-				}
+				console.log ("Point removed");
 			}
+
+			return;
 		}
 	}
 
 	// Get the number of currently existing points
 	static getNumPoints ()
 	{
-		return Point.numPoints;
+		return Point.points.length;
 	}
 
 	// Get the nearest point (if there is one in reach)
@@ -113,27 +120,8 @@ export class Point
 		var targetX = Point.getPointIndex (x, Point.contextWidth);
 		var targetY = Point.getPointIndex (y, Point.contextHeight);
 
-		const p = Point.getNearestPoint (x, y, targetX, targetY);
+		const l = Point.coordinateSystem[targetX][targetY].length;
 
-		if (p == null)
-		{
-			console.log ("Could not get point");
-			return null;
-		}
-
-		if (p.getDistance (x, y) > r)
-		{
-			console.log ("Measured distance: " + p.getDistance (x, y));
-			console.log ("Given radius: " + r);
-			return null;
-		}
-
-		return Point.points[targetX][targetY][0];
-	}
-
-	static getNearestPoint (x, y, iX, iY)
-	{
-		const l = Point.points[iX][iY].length;
 		console.log (l);
 
 		if (l == 0)
@@ -149,73 +137,58 @@ export class Point
 
 			if (p == null)
 			{
-				p = Point.points[iX][iY][i];
+				p = Point.coordinateSystem[targetX][targetY][i];
 				console.log ("Distance: " + p.getDistance (x, y));
 				continue;
 			}
 
 			console.log ("Old distance: " + p.getDistance (x, y));
-			console.log ("New distance: " + Point.points[iX][iY][i].getDistance (x, y));
+			console.log ("New distance: " + Point.coordinateSystem[targetX][targetY][i].getDistance (x, y));
 
-			if (p.getDistance (x, y) > Point.points[iX][iY][i].getDistance (x, y))
+			if (p.getDistance (x, y) > Point.coordinateSystem[targetX][targetY][i].getDistance (x, y))
 			{
 				console.log ("New distance won");
-				p = Point.points[iX][iY][i];
+				p = Point.coordinateSystem[targetX][targetY][i];
 				continue;
 			}
 		}
 
 		console.log ("Returned point has the following distance: " + p.getDistance (x, y));
 
-		return p;
+		if (p == null)
+		{
+			console.log ("Could not get point");
+			return null;
+		}
+
+		if (p.getDistance (x, y) > r)
+		{
+			console.log ("Measured distance: " + p.getDistance (x, y));
+			console.log ("Given radius: " + r);
+			return null;
+		}
+
+		return Point.coordinateSystem[targetX][targetY][0];
 	}
 
 	// Get point by its ID
 	static getPointById (id)
 	{
-		for (var x = 0; x < 8; x++)
-		{
-			for (var y = 0; y < 8; y++)
-			{
-				for (var i = 0; i < Point.points[x][y].length; i++)
-				{
-					if (Point.points[x][y][i].id == id)
-					{
-						return Point.points[x][y][i];
-					}
-				}
-			}
-		}
+		const p = Point.points.find ((e) => e.id == id);
 
-		return null;
+		return (p === undefined) ? null : p;
 	}
 
 	// Is any point selected?
 	static isSelected ()
 	{
-		return (Point.currentPoint == 0) ? false : true;
+		return (Point.currentPoint == null) ? false : true;
 	}
 
 	// Get the currently selected point (if there is one)
 	static getSelected ()
 	{
-		if (Point.currentPoint != 0)
-		{
-			for (var x = 0; x < 8; x++)
-			{
-				for (var y = 0; y < 8; y++)
-				{
-					const r = Point.points[x][y].find ((p) => { return p.id == Point.currentPoint; });
-
-					if (r !== undefined)
-					{
-						return r;
-					}
-				}
-			}
-		}
-
-		return null;
+		return Point.currentPoint;
 	}
 
 	// Draw all points
@@ -231,24 +204,9 @@ export class Point
 	}
 
 	// Unselect the current point
-	// TODO: Optimize this mess
 	static unselect ()
 	{
-		for (var x = 0; x < 8; x++)
-		{
-			for (var y = 0; y < 8; y++)
-			{
-				const r = Point.points[x][y].find ((p) => { return p.id == Point.currentPoint; });
-
-				if (r !== undefined)
-				{
-					r.unselect ();
-					Point.currentPoint = 0;
-
-					return;
-				}
-			}
-		}
+		Point.currentPoint = null;
 	}
 
 	/////////////////////////////////////////
@@ -265,6 +223,9 @@ export class Point
 		// Current coordinates on the screen (while moving)
 		this.drawX = x;
 		this.drawY = y;
+
+		this.realX = (this.drawX / Grid.getSpanX ()) * Grid.getSize ();
+		this.realY = (this.drawY / Grid.getSpanY ()) * Grid.getSize ();
 
 		// Own indices for the 3D-point-array
 		// Only for the first two dimensions, the third one is determined by its distance to the mouse
@@ -295,12 +256,12 @@ export class Point
 	{
 		if (this.selected == false)
 		{
-			if (this.id != Point.currentPoint)
+			if (Point.currentPoint != null)
 			{
-				Point.unselect ();
-				Point.currentPoint = this.id;
+				Point.currentPoint.unselect ();
 			}
 
+			Point.currentPoint = this;
 			this.selected = true;
 		}
 	}
@@ -309,6 +270,7 @@ export class Point
 	unselect ()
 	{
 		this.selected = false;
+		Point.currentPoint == null;
 	}
 
 	// Move this point
@@ -323,6 +285,9 @@ export class Point
 	{
 		this.x = x;
 		this.y = y;
+
+		this.realX = (this.drawX / Grid.getSpanX ()) * Grid.getSize ();
+		this.realY = (this.drawY / Grid.getSpanY ()) * Grid.getSize ();
 	}
 
 	// Set new position relative to old position
@@ -330,6 +295,10 @@ export class Point
 	{
 		this.x += x;
 		this.y += y;
+
+		this.realX = (this.drawX / Grid.getSpanX ()) * Grid.getSize ();
+		this.realY = (this.drawY / Grid.getSpanY ()) * Grid.getSize ();
+		console.log ("Mööp");
 	}
 
 	// Accept the current coordinates used for drawing as official ones
@@ -361,19 +330,19 @@ export class Point
 	{
 		this.setSnappedPos ();
 
-		const i = Point.points[this.arrayX][this.arrayY].indexOf (this);
+		const i = Point.coordinateSystem[this.arrayX][this.arrayY].indexOf (this);
 
 		if (i == -1)
 		{
 			return;
 		}
 
-		Point.points[this.arrayX][this.arrayY].splice (i, 1);
+		Point.coordinateSystem[this.arrayX][this.arrayY].splice (i, 1);
 
 		this.arrayX = Point.getPointIndex (this.x, Point.contextWidth);
 		this.arrayY = Point.getPointIndex (this.y, Point.contextHeight);
 
-		Point.points[this.arrayX][this.arrayY].push (this);
+		Point.coordinateSystem[this.arrayX][this.arrayY].push (this);
 
 		this.color = "yellow";
 	}
@@ -390,6 +359,11 @@ export class Point
 		return this.drawX;
 	}
 
+	getCoordX ()
+	{
+		return this.arrayX;
+	}
+
 	// Get the currently accepted position on the y-axis
 	getY ()
 	{
@@ -400,6 +374,11 @@ export class Point
 	getDrawnY ()
 	{
 		return this.drawY;
+	}
+
+	getCoordY ()
+	{
+		return this.arrayY;
 	}
 
 	// Get the distance between the given coordinates and the point
@@ -494,11 +473,7 @@ export class Point
 
 		Point.context.fillStyle = "black";
 		Point.context.font = "24px sanserif";
-		Point.context.fillText (this.drawX + ", " + this.drawY, this.drawX + 20, this.drawY + 5);
-/*
-		Point.context.fillText (((this.drawX / Grid.getSpanX ()) * Grid.getSize ()).toString () + ", "
-								+ ((this.drawY / Grid.getSpanY ()) * Grid.getSize ()).toString (),
-								this.drawX + 20, this.drawY + 5);
-*/
+
+		Point.context.fillText (this.realX + ", " + this.realY, this.drawX + 20, this.drawY + 5);
 	}
 }
