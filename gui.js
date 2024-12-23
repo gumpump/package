@@ -9,6 +9,11 @@ export class GUI
 	static hButtonLine = null;
 	static hButtonRect = null;
 
+	// Input fields
+	// - Numbers
+	static hNumberGridSpanX = null;
+	static hNumberGridSpanY = null;
+
 	// Canvas
 	static canvas = null;
 	static canvasRect = null;
@@ -28,6 +33,8 @@ export class GUI
 	{
 		document.body.addEventListener ("keydown", GUI.keyDown);
 		document.body.addEventListener ("keyup", GUI.keyUp);
+
+		// Buttons
 		GUI.hButtonShow = document.getElementById ("Show");
 		GUI.hButtonShow.addEventListener ("mousedown", GUI.showAll);
 		GUI.hButtonShow.addEventListener ("mouseup", GUI.hideAll);
@@ -42,6 +49,17 @@ export class GUI
 		GUI.hButtonClear = document.getElementById ("Clear");
 		GUI.hButtonClear.addEventListener ("click", GUI.buttonClear);
 
+		// Input fields
+		// - Numbers
+		GUI.hNumberGridSpanX = document.getElementById ("grid_span-x");
+		GUI.hNumberGridSpanX.value = Grid.getSpanX ();
+		GUI.hNumberGridSpanX.addEventListener ("change", GUI.gridSpanXChange);
+
+		GUI.hNumberGridSpanY = document.getElementById ("grid_span-y");
+		GUI.hNumberGridSpanY.value = Grid.getSpanY ();
+		GUI.hNumberGridSpanY.addEventListener ("change", GUI.gridSpanYChange);
+
+		// Canvas
 		GUI.canvas = document.getElementsByTagName ("canvas")[0];
 		GUI.canvas.addEventListener ("click", GUI.pointClick);
 		GUI.canvas.addEventListener ("mousedown", GUI.pointDown);
@@ -114,12 +132,24 @@ export class GUI
 	{
 		if (Point.isSelected () == true)
 		{
+			// Broken because of the new return value of Point.getSelected
+			// TODO: Change to array
 			const p = Point.getSelected ();
-			const pX = p.getX ();
-			const pY = p.getY ();
-			const offX = (pX + 50 > GUI.canvas.width) ? -50 : 50;
-			const offY = (pY + 50 > GUI.canvas.height) ? -50 : 50;
-			Line.addLine (new Line (GUI.ctx, p, new Point (pX + offX, pY + offY)));
+			const l = p.length;
+
+			if (l == 0)
+			{
+				return;
+			}
+
+			for (var i = 0; i < l; i++)
+			{
+				const pX = p[i].getX ();
+				const pY = p[i].getY ();
+				const offX = (pX + 50 > GUI.canvas.width) ? -50 : 50;
+				const offY = (pY + 50 > GUI.canvas.height) ? -50 : 50;
+				Line.addLine (new Line (GUI.ctx, p[i], new Point (pX + offX, pY + offY)));
+			}
 		}
 	}
 
@@ -143,6 +173,19 @@ export class GUI
 	{
 		Point.clear ();
 		Line.update ();
+	}
+
+	static gridSpanXChange (event)
+	{
+		console.log (event);
+		Grid.setSpanX (event.target.valueAsNumber);
+		Grid.update ();
+	}
+
+	static gridSpanYChange (event)
+	{
+		Grid.setSpanY (event.target.valueAsNumber);
+		Grid.update ();
 	}
 
 	static pointClick (event)
