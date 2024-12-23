@@ -15,13 +15,19 @@ export class GUI
 	static ctx = null;
 
 	// Helper
+	static multipleSelect = false;
 	static drag = false;
+
+	// General infos
+	static status = null;
 
 	// Debug infos
 	static debugPoints = null;
 
 	static create ()
 	{
+		document.body.addEventListener ("keydown", GUI.keyDown);
+		document.body.addEventListener ("keyup", GUI.keyUp);
 		GUI.hButtonShow = document.getElementById ("Show");
 		GUI.hButtonShow.addEventListener ("mousedown", GUI.showAll);
 		GUI.hButtonShow.addEventListener ("mouseup", GUI.hideAll);
@@ -54,6 +60,9 @@ export class GUI
 
 		GUI.debugPoints = document.getElementById ("Points");
 		GUI.debugPoints.innerText = Point.getNumPoints().toString ();
+
+		GUI.status = document.getElementById ("Multi");
+		GUI.status.innerText = "Single select";
 	}
 
 	static getContext ()
@@ -73,6 +82,24 @@ export class GUI
 	}
 
 	// Event handler
+	static keyDown (event)
+	{
+		if (event.ctrlKey == true && GUI.multipleSelect == false)
+		{
+			GUI.multipleSelect = true;
+			GUI.status.innerText = "Multi select";
+		}
+	}
+
+	static keyUp (event)
+	{
+		if (event.ctrlKey == false)
+		{
+			GUI.multipleSelect = false;
+			GUI.status.innerText = "Single select";
+		}
+	}
+
 	static showAll (event)
 	{
 		Point.showAll ();
@@ -124,42 +151,55 @@ export class GUI
 
 		if (p != null)
 		{
-			p.select ();
+			p.select (GUI.multipleSelect);
 		}
 
 		else
 		{
-			Point.unselect ();
+			if (GUI.multipleSelect == false)
+			{
+				Point.unselect ();
+			}
 		}
 	}
 
 	static pointDown (event)
 	{
 		const p = Point.getSelected ();
+		const l = p.length;
 
-		if (p == null)
+		if (l == 0)
 		{
 			return;
 		}
 
-		if (p.getDistance (event.offsetX, event.offsetY) > 15)
+		for (var i = 0; i < l; i++)
 		{
-			return;
+			if (p[i].getDistance (event.offsetX, event.offsetY) > 15)
+			{
+				continue;
+			}
+
+			p[i].move ();
 		}
 
-		p.move ();
-		Point.showAll ();
+		//Point.showAll ();
 		GUI.drag = true;
 	}
 
 	static pointUp (event)
 	{
 		const p = Point.getSelected ();
+		const l = p.length;
 
-		if (p != null)
+		if (l == 0)
 		{
 			Point.hideAll ();
-			p.update ();
+
+			for (var i = 0; i < l; i++)
+			{
+				p[i].update ();
+			}
 		}
 
 		GUI.drag = false;
@@ -174,6 +214,17 @@ export class GUI
 			return;
 		}
 
-		Point.getSelected().setRelPos (event.movementX, event.movementY);
+		const p = Point.getSelected();
+		const l = p.length;
+
+		if (l == 0)
+		{
+			return;
+		}
+
+		for (var i = 0; i < l; i++)
+		{
+			p[i].setRelPos (event.movementX, event.movementY);
+		}
 	}
 }

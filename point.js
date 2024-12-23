@@ -19,9 +19,8 @@ export class Point
 	// [X-Axis][Y-Axis][Points]
 	static coordinateSystem = [];
 
-	// Currently selected point
-	// There can be only one
-	static currentPoint = null;
+	// Currently selected points
+	static currentPoints = [];
 
 	// Show all points
 	// Only showing, not selecting
@@ -199,13 +198,13 @@ export class Point
 	// Is any point selected?
 	static isSelected ()
 	{
-		return (Point.currentPoint == null) ? false : true;
+		return (Point.currentPoints.length > 0) ? true : false;
 	}
 
 	// Get the currently selected point (if there is one)
 	static getSelected ()
 	{
-		return Point.currentPoint;
+		return Point.currentPoints;
 	}
 
 	// Draw all points
@@ -223,11 +222,17 @@ export class Point
 	// Unselect the current point
 	static unselect ()
 	{
-		if (Point.currentPoint != null)
+		const l = Point.currentPoints.length;
+
+		if (l > 0)
 		{
-			Point.currentPoint.unselect ();
-			Point.currentPoint = null;
+			for (var i = 0; i < l; i++)
+			{
+				Point.currentPoints[i].unselect (false);
+			}
 		}
+
+		Point.currentPoints = [];
 	}
 
 	static draw ()
@@ -288,25 +293,37 @@ export class Point
 	}
 
 	// Select this point
-	select ()
+	select (multi)
 	{
 		if (this.selected == false)
 		{
-			if (Point.currentPoint != null)
+			if (multi == false)
 			{
-				Point.currentPoint.unselect ();
+				Point.unselect ();
 			}
 
-			Point.currentPoint = this;
+			Point.currentPoints.push (this);
 			this.selected = true;
 		}
 	}
 
 	// Unselect this point
-	unselect ()
+	unselect (remove)
 	{
 		this.selected = false;
-		Point.currentPoint == null;
+		console.log ("Point unselected");
+
+		if (remove == true)
+		{
+			const i = Point.currentPoints.indexOf (this);
+
+			if (i != -1)
+			{
+				Point.currentPoints.splice (i, 1);
+			}
+		}
+
+		this.update ();
 	}
 
 	// Move this point
