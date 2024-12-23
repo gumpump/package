@@ -48,6 +48,8 @@ export class Point
 				Point.coordinateSystem[x][y] = [];
 			}
 		}
+
+		console.log ("Coordinate system array created");
 	}
 
 	// Helper for getting the index values for the points array
@@ -82,30 +84,54 @@ export class Point
 		Point.coordinateSystem[targetX][targetY].push (p);
 
 		console.log ("Point added");
-		console.log ("There are " + Point.points.length + " points");
 	}
 
 	// Remove a point out of the array
 	static removePoint (p)
 	{
-		const i = Point.points.indexOf (p);
-		Point.points.splice (i, 1);
-
-		const targetX = p.getCoordX ();
-		const targetY = p.getCoordY ();
-		const j = Point.coordinateSystem[targetX][targetY].indexOf (p);
-
-		if (j != -1)
+		if (Point.points.length > 0)
 		{
-			Point.coordinateSystem[targetX][targetY].splice (j, 1);
+			const i = Point.points.indexOf (p);
 
 			if (i != -1)
 			{
-				console.log ("Point removed");
+				Point.points.splice (i, 1);
+				console.log ("Point removed in .points");
 			}
-
-			return;
 		}
+
+		if (Point.coordinateSystem.length > 0)
+		{
+			const targetX = p.getCoordX ();
+			const targetY = p.getCoordY ();
+			const j = Point.coordinateSystem[targetX][targetY].indexOf (p);
+
+			if (j != -1)
+			{
+				Point.coordinateSystem[targetX][targetY].splice (j, 1);
+				console.log ("Point removed in .coordinateSystem");
+			}
+		}
+	}
+
+	static clear ()
+	{
+		const l = Point.points.length;
+
+		if (l == 0)
+		{
+			return 0;
+		}
+
+		for (var i = 0; i < l; i++)
+		{
+			Point.points[i].setNewId (-1);
+		}
+
+		Point.points = null;
+		Point.points = [];
+		Point.coordinateSystem = null;
+		Point.coordinateSystem = [];
 	}
 
 	// Get the number of currently existing points
@@ -122,8 +148,6 @@ export class Point
 
 		const l = Point.coordinateSystem[targetX][targetY].length;
 
-		console.log (l);
-
 		if (l == 0)
 		{
 			return null;
@@ -133,40 +157,26 @@ export class Point
 
 		for (var i = 0; i < l; i++)
 		{
-			console.log ("Point " + i);
-
 			if (p == null)
 			{
 				p = Point.coordinateSystem[targetX][targetY][i];
-				console.log ("Distance: " + p.getDistance (x, y));
 				continue;
 			}
 
-			console.log ("Old distance: " + p.getDistance (x, y));
-			console.log ("New distance: " + Point.coordinateSystem[targetX][targetY][i].getDistance (x, y));
-
 			if (p.getDistance (x, y) > Point.coordinateSystem[targetX][targetY][i].getDistance (x, y))
 			{
-				console.log ("New distance won");
 				p = Point.coordinateSystem[targetX][targetY][i];
 				continue;
 			}
 		}
 
-		console.log ("Returned point has the following distance: " + p.getDistance (x, y));
-
 		if (p == null)
 		{
-			console.log ("Could not get point");
-
 			return null;
 		}
 
 		if (p.getDistance (x, y) > r)
 		{
-			console.log ("Measured distance: " + p.getDistance (x, y));
-			console.log ("Given radius: " + r);
-
 			return null;
 		}
 
@@ -212,6 +222,21 @@ export class Point
 		{
 			Point.currentPoint.unselect ();
 			Point.currentPoint = null;
+		}
+	}
+
+	static draw ()
+	{
+		const l = Point.points.length;
+
+		if (l == null)
+		{
+			return;
+		}
+
+		for (var i = 0; i < Point.points.length; i++)
+		{
+			Point.points[i].draw ();
 		}
 	}
 
@@ -304,7 +329,6 @@ export class Point
 
 		this.realX = (this.drawX / Grid.getSpanX ()) * Grid.getSize ();
 		this.realY = (this.drawY / Grid.getSpanY ()) * Grid.getSize ();
-		console.log ("Mööp");
 	}
 
 	// Accept the current coordinates used for drawing as official ones
