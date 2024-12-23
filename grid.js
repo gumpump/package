@@ -44,10 +44,20 @@ export class Grid
 		return Grid.size;
 	}
 
+	static setSpanX (x)
+	{
+		Grid.spanX = x;
+	}
+
 	// Get the span size on the x-axis (in pixel)
 	static getSpanX ()
 	{
 		return Grid.spanX;
+	}
+
+	static setSpanY (y)
+	{
+		Grid.spanY = y;
 	}
 
 	// Get the span size on the y-axis (in pixel)
