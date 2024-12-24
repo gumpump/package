@@ -132,8 +132,6 @@ export class GUI
 	{
 		if (Point.isSelected () == true)
 		{
-			// Broken because of the new return value of Point.getSelected
-			// TODO: Change to array
 			const p = Point.getSelected ();
 			const l = p.length;
 
@@ -158,10 +156,10 @@ export class GUI
 		const middleWidth = GUI.canvas.width / 2;
 		const middleHeight = GUI.canvas.height / 2;
 
-		const pUpperLeft = new Point (middleHeight - 50, middleWidth - 50);
-		const pUpperRight = new Point (middleHeight - 50, middleWidth + 50);
-		const pLowerRight = new Point (middleHeight + 50, middleWidth + 50);
-		const pLowerLeft = new Point (middleHeight + 50, middleWidth - 50);
+		const pUpperLeft = new Point (middleWidth - 50, middleHeight - 50);
+		const pUpperRight = new Point (middleWidth - 50, middleHeight + 50);
+		const pLowerRight = new Point (middleWidth + 50, middleHeight + 50);
+		const pLowerLeft = new Point (middleWidth + 50, middleHeight - 50);
 
 		Line.addLine (new Line (GUI.ctx, pUpperLeft, pUpperRight));
 		Line.addLine (new Line (GUI.ctx, pUpperRight, pLowerRight));
@@ -177,7 +175,6 @@ export class GUI
 
 	static gridSpanXChange (event)
 	{
-		console.log (event);
 		Grid.setSpanX (event.target.valueAsNumber);
 		Grid.update ();
 	}
