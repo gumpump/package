@@ -22,6 +22,9 @@ export class Point
 	// Currently selected points
 	static currentPoints = [];
 
+	// Signal for other objects to update
+	static changed = false;
+
 	// Show all points
 	// Only showing, not selecting
 	static show = false;
@@ -235,6 +238,16 @@ export class Point
 		Point.currentPoints = [];
 	}
 
+	static hasChanged ()
+	{
+		return Point.changed;
+	}
+
+	static setChange (v)
+	{
+		Point.changed = v;
+	}
+
 	static draw ()
 	{
 		const l = Point.points.length;
@@ -363,21 +376,24 @@ export class Point
 
 		if (p == null)
 		{
+			console.log ("No point found");
 			return;
 		}
 
 		if (p.getId () == this.id)
 		{
+			console.log ("Found itself");
 			return;
 		}
 
 		if (p.getX () == this.x && p.getY () == this.y)
 		{
+			console.log ("Found existing point");
 			p.setNewId (this.id);
+			Point.setChange (true);
 		}
 	}
 
-	// Update the point's position in the points array
 	update ()
 	{
 		this.setSnappedPos ();
