@@ -22,6 +22,8 @@ export class Line
 	{
 		Line.lines.push (l);
 
+		console.log ("Line added");
+
 		const startId = l.start.getId ();
 
 		if (Line.pointIds.includes (startId) == false)
@@ -54,8 +56,9 @@ export class Line
 		if (i != -1)
 		{
 			Line.lines.splice (i, 1);
-			console.log ("Line removed");
 		}
+
+		console.log ("Line removed");
 	}
 
 	static update ()
@@ -79,6 +82,12 @@ export class Line
 
 	static draw ()
 	{
+		if (Point.hasChanged () == true)
+		{
+			Line.update ();
+			Point.setChange (false);
+		}
+
 		const l = Line.lines.length;
 
 		if (l == 0)
