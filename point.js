@@ -85,7 +85,7 @@ export class Point
 
 		Point.coordinateSystem[targetX][targetY].push (p);
 
-		console.log ("Point added");
+		console.log ("Point " + p.id + " added");
 	}
 
 	// Remove a point out of the array
@@ -98,7 +98,7 @@ export class Point
 			if (i != -1)
 			{
 				Point.points.splice (i, 1);
-				console.log ("Point removed in .points");
+				console.log ("Point " + p.id + " removed in .points");
 			}
 		}
 
@@ -111,7 +111,7 @@ export class Point
 			if (j != -1)
 			{
 				Point.coordinateSystem[targetX][targetY].splice (j, 1);
-				console.log ("Point removed in .coordinateSystem");
+				console.log ("Point " + p.id + " removed in .coordinateSystem");
 			}
 		}
 	}
@@ -160,6 +160,8 @@ export class Point
 			return null;
 		}
 
+		console.log (Point.coordinateSystem[targetX][targetY]);
+
 		var p = null;
 
 		for (var i = 0; i < l; i++)
@@ -187,6 +189,8 @@ export class Point
 			return null;
 		}
 
+		console.log ("Nearest point found: " + p.id);
+
 		return p;
 	}
 
@@ -195,7 +199,15 @@ export class Point
 	{
 		const p = Point.points.find ((e) => e.id == id);
 
-		return (p === undefined) ? null : p;
+		if (p === undefined)
+		{
+			console.log ("Could not find point with id: " + id);
+			console.log (Point.points);
+
+			return null;
+		}
+
+		return p;
 	}
 
 	// Is any point selected?
@@ -396,6 +408,11 @@ export class Point
 
 	update ()
 	{
+		if (this.isDeprecated () == true)
+		{
+			return;
+		}
+
 		this.setSnappedPos ();
 
 		const i = Point.coordinateSystem[this.arrayX][this.arrayY].indexOf (this);
@@ -474,6 +491,8 @@ export class Point
 	setNewId (id)
 	{
 		this.newId = id;
+		console.log ("Point " + this.id + " will be replaced by point " + this.newId);
+		console.log (Point.points);
 	}
 
 	// Get the new id
