@@ -116,6 +116,9 @@ export class Line
 
 		// Main context
 		this.context = ctx;
+
+		this.id = Line.idCounter;
+		Line.idCounter++;
 	}
 
 	// Set start point (actual reference to a new or existing point)
@@ -153,9 +156,13 @@ export class Line
 	{
 		if (this.start.isDeprecated () == true)
 		{
+			console.log ("Starting point " + this.start.getId () + " of line " + this.id + " is deprecated");
 			const idStart = this.start.getNewId ();
+			console.log ("New starting point of line " + this.id + " has the id: " + idStart);
 			Point.removePoint (this.start);
 			this.start = null;
+
+			console.log ("Starting point of line " + this.id + " removed");
 
 			if (idStart == -1)
 			{
@@ -165,13 +172,19 @@ export class Line
 			}
 
 			this.start = Point.getPointById (idStart);
+
+			console.log ("New starting point " + idStart + " of line " + this.id + " set");
 		}
 
 		if (this.end.isDeprecated () == true)
 		{
+			console.log ("Ending point " + this.end.getId () + " of line " + this.id + " is deprecated");
 			const idEnd = this.end.getNewId ();
+			console.log ("New ending point of line " + this.id + " has the id: " + idEnd);
 			Point.removePoint (this.end);
 			this.end = null;
+
+			console.log ("Ending point of line " + this.id + " removed");
 
 			if (idEnd == -1)
 			{
@@ -181,15 +194,27 @@ export class Line
 			}
 
 			this.end = Point.getPointById (idEnd);
+
+			console.log ("New ending point of line " + this.id + " set");
 		}
 	}
 
 	// Draw the line
 	draw ()
 	{
+		const startX = this.start.getDrawnX ();
+		const startY = this.start.getDrawnY ();
+		const endX = this.end.getDrawnX ();
+		const endY = this.end.getDrawnY ();
+
 		this.context.beginPath ();
-		this.context.moveTo (this.start.getDrawnX (), this.start.getDrawnY ());
-		this.context.lineTo (this.end.getDrawnX (), this.end.getDrawnY ());
+		this.context.moveTo (startX, startY);
+		this.context.lineTo (endX, endY);
 		this.context.stroke ();
+
+		this.context.fillStyle = "black";
+		this.context.font = "24px sanserif";
+
+		this.context.fillText (this.id, startX + ((endX - startX) / 2) + 5, startY + ((endY - startY) / 2) + 5);
 	}
 }
