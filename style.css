@@ -17,7 +17,7 @@ p.DebugMessage
     padding: 5px;
 }
 
-p.InfoMessage
+.InfoMessage
 {
     font-size: 0.8rem;
     margin: 0px;
@@ -67,10 +67,15 @@ div.Sidebar_Upper
     height: 50%;
 }
 
+input.number_input
+{
+    width: 40px;
+}
+
 div#Middle button
 {
-    width:90%;
+    display: block;
+    width: 90%;
     height: 30px;
     margin: 5px auto;
-    display:block
 }
