@@ -61,6 +61,19 @@ export class Face
 		}
 	}
 
+	static getSelected ()
+	{
+		for (var i = 0; i < Face.faces.length; i++)
+		{
+			if (Face.faces[i].isSelected () == true)
+			{
+				return Face.faces[i];
+			}
+		}
+
+		return null;
+	}
+
 	static update ()
 	{
 		for (var i = 0; i > Face.faces.length; i++)
@@ -110,6 +123,7 @@ export class Face
 			}
 		}
 
+		this.selected = false;
 		this.color = "lightgray";
 
 		if (add == true)
@@ -122,6 +136,14 @@ export class Face
 	{
 		l.setFaceId (this.id);
 		this.lines.push (l);
+	}
+
+	setRelPos (x, y)
+	{
+		for (var i = 0; i < this.points.length; i++)
+		{
+			this.points[i].setRelPos (x, y);
+		}
 	}
 
 	intersect (x, y)
@@ -155,12 +177,20 @@ export class Face
 	select ()
 	{
 		console.log ("Face " + this.id + " selected");
+
+		this.selected = true;
 		this.color = "gray";
 	}
 
 	unselect ()
 	{
+		this.selected = false;
 		this.color = "lightgray";
+	}
+
+	isSelected ()
+	{
+		return this.selected;
 	}
 
 	update ()

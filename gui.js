@@ -22,7 +22,7 @@ export class GUI
 	static ctx = null;
 
 	// Helper
-	static drag = false;
+	static drag = "o";
 
 	// General infos
 	static status = null;
@@ -156,23 +156,39 @@ export class GUI
 		const p = Point.getSelected ();
 		const l = p.length;
 
-		if (l == 0)
+		if (l > 0)
 		{
-			return;
+			for (var i = 0; i < l; i++)
+			{
+				if (p[i].getDistance (event.offsetX, event.offsetY) > 15)
+				{
+					continue;
+				}
+
+				p[i].move ();
+				GUI.drag = "p";
+
+				return;
+			}
 		}
 
-		for (var i = 0; i < l; i++)
+		else
 		{
-			if (p[i].getDistance (event.offsetX, event.offsetY) > 15)
-			{
-				continue;
-			}
+			const f = Face.getSelected ();
 
-			p[i].move ();
+			if (f != null)
+			{
+				if (f.intersect (event.offsetX, event.offsetY) == true)
+				{
+					GUI.drag = "f";
+
+					return;
+				}
+			}
 		}
 
 		//Point.showAll ();
-		GUI.drag = true;
+		GUI.drag = "o";
 	}
 
 	static pointUp (event)
@@ -183,36 +199,49 @@ export class GUI
 		if (l == 0)
 		{
 			Point.hideAll ();
-
-			for (var i = 0; i < l; i++)
-			{
-				p[i].update ();
-			}
 		}
 
-		GUI.drag = false;
+		GUI.drag = "o";
 
 		Manager.update ();
 	}
 
 	static pointMove (event)
 	{
-		if (GUI.drag == false)
+		switch (GUI.drag)
 		{
-			return;
-		}
+			case "o":
+			{
+				return;
+			} break;
 
-		const p = Point.getSelected();
-		const l = p.length;
+			case "p":
+			{
+				const p = Point.getSelected ();
+				const l = p.length;
 
-		if (l == 0)
-		{
-			return;
-		}
+				if (l > 0)
+				{
+					for (var i = 0; i < l; i++)
+					{
+						p[i].setRelPos (event.movementX, event.movementY);
+					}
 
-		for (var i = 0; i < l; i++)
-		{
-			p[i].setRelPos (event.movementX, event.movementY);
+					return;
+				}
+			} break;
+
+			case "f":
+			{
+				const f = Face.getSelected ();
+
+				if (f != null)
+				{
+					f.setRelPos (event.movementX, event.movementY);
+				}
+
+				return;
+			} break;
 		}
 	}
 }
