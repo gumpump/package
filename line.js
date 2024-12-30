@@ -41,7 +41,7 @@ export class Line
 
 		else
 		{
-			console.log ("Potential face detected by ending point");
+			console.log ("Potential face detected");
 
 			return Line.buildingFace (l.end);
 		}
@@ -102,11 +102,14 @@ export class Line
 		}
 	}
 
+	// If there is more than one line with this starting point,
+	// shit will hit the fan
+	// TODO: Create a solution for that, maybe return an array
 	static getLineByStartPoint (p)
 	{
 		const l = Line.lines.length;
 
-		if (l == -1)
+		if (l == 0)
 		{
 			return;
 		}
@@ -122,11 +125,14 @@ export class Line
 		return null;
 	}
 
+	// If there is more than one line with this ending point,
+	// shit will hit the fan
+	// TODO: Create a solution for that, maybe return an array
 	static getLineByEndPoint (p)
 	{
 		const l = Line.lines.length;
 
-		if (l == -1)
+		if (l == 0)
 		{
 			return;
 		}
