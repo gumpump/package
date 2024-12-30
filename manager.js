@@ -81,6 +81,11 @@ export class Manager
 				Properties.buildPointView (p);
 			}
 
+			else
+			{
+				Properties.clear ();
+			}
+
 			Face.unselect ();
 
 			return;
