@@ -23,7 +23,7 @@ export class Line
 	{
 		Line.lines.push (l);
 
-		console.log ("Line added");
+		console.log ("Line " + l.id + " added");
 
 		const startId = l.start.getId ();
 
@@ -91,8 +91,6 @@ export class Line
 
 		if (lArray.length > 0)
 		{
-			console.log (lArray);
-
 			return lArray;
 		}
 
@@ -291,6 +289,11 @@ export class Line
 	// Draw the line
 	draw ()
 	{
+		if (this.isDeprecated () == true)
+		{
+			return;
+		}
+
 		if (this.faceId != 0)
 		{
 			return;
@@ -306,9 +309,10 @@ export class Line
 		Line.context.lineTo (endX, endY);
 		Line.context.stroke ();
 
-		Line.context.fillStyle = "black";
-		Line.context.font = "24px sanserif";
+		// Only if shit hits the fan
+		//Line.context.fillStyle = "black";
+		//Line.context.font = "24px sanserif";
 
-		Line.context.fillText (this.id, startX + ((endX - startX) / 2) + 5, startY + ((endY - startY) / 2) + 5);
+		//Line.context.fillText (this.id, startX + ((endX - startX) / 2) + 5, startY + ((endY - startY) / 2) + 5);
 	}
 }
