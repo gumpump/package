@@ -116,6 +116,18 @@ export class Point
 		}
 	}
 
+	static removeDeprecated ()
+	{
+		for (var i = 0; i < Point.points.length; i++)
+		{
+			if (Point.points[i].isDeprecated () == true)
+			{
+				Point.removePoint (Point.points[i]);
+				i--;
+			}
+		}
+	}
+
 	static clear ()
 	{
 		const l = Point.points.length;
@@ -129,11 +141,6 @@ export class Point
 		{
 			Point.points[i].setNewId (-1);
 		}
-
-		Point.points = null;
-		Point.points = [];
-		Point.coordinateSystem = null;
-		Point.coordinateSystem = [];
 	}
 
 	// Get the number of currently existing points
@@ -258,6 +265,16 @@ export class Point
 	static setChange (v)
 	{
 		Point.changed = v;
+	}
+
+	static update ()
+	{
+		Point.removeDeprecated ();
+
+		for (var i = 0; i < Point.points.length; i++)
+		{
+			Point.points[i].update ();
+		}
 	}
 
 	static draw ()
@@ -385,19 +402,20 @@ export class Point
 	{
 		this.x = this.drawX;
 		this.y = this.drawY;
+	}
 
+	checkForDuplicates ()
+	{
 		const p = Point.getPointByPos (this.x, this.y, 0);
 
 		if (p == null)
 		{
-			console.log ("No point found");
-			return;
+			return false;
 		}
 
 		if (p.getId () == this.id)
 		{
-			console.log ("Found itself");
-			return;
+			return false;
 		}
 
 		if (p.getX () == this.x && p.getY () == this.y)
@@ -405,33 +423,11 @@ export class Point
 			console.log ("Found existing point");
 			p.setNewId (this.id);
 			Point.setChange (true);
-		}
-	}
 
-	update ()
-	{
-		if (this.isDeprecated () == true)
-		{
-			return;
+			return true;
 		}
 
-		this.setSnappedPos ();
-
-		const i = Point.coordinateSystem[this.arrayX][this.arrayY].indexOf (this);
-
-		if (i == -1)
-		{
-			return;
-		}
-
-		Point.coordinateSystem[this.arrayX][this.arrayY].splice (i, 1);
-
-		this.arrayX = Point.getPointIndex (this.x, Point.contextWidth);
-		this.arrayY = Point.getPointIndex (this.y, Point.contextHeight);
-
-		Point.coordinateSystem[this.arrayX][this.arrayY].push (this);
-
-		this.color = "yellow";
+		return false;
 	}
 
 	// Get the currently accepted position on the x-axis
@@ -508,6 +504,45 @@ export class Point
 	isDeprecated ()
 	{
 		return (this.id != this.newId) ? true : false;
+	}
+
+	update ()
+	{
+		if (this.isDeprecated () == true)
+		{
+			return;
+		}
+
+		this.setSnappedPos ();
+
+		const r = this.checkForDuplicates ();
+
+		if (r == true)
+		{
+			return;
+		}
+
+		const newArrayX = Point.getPointIndex (this.x, Point.contextWidth);
+		const newArrayY = Point.getPointIndex (this.y, Point.contextHeight);
+
+		if (newArrayX != this.arrayX || newArrayY != this.arrayY)
+		{
+			const i = Point.coordinateSystem[this.arrayX][this.arrayY].indexOf (this);
+
+			if (i == -1)
+			{
+				return;
+			}
+
+			Point.coordinateSystem[this.arrayX][this.arrayY].splice (i, 1);
+
+			this.arrayX = newArrayX;
+			this.arrayY = newArrayY;
+
+			Point.coordinateSystem[this.arrayX][this.arrayY].push (this);
+		}
+
+		this.color = "yellow";
 	}
 
 	// Draw the point (if selected)
