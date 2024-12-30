@@ -151,11 +151,6 @@ export class GUI
 		Grid.update ();
 	}
 
-	static pointClick (event)
-	{
-		
-	}
-
 	static pointDown (event)
 	{
 		const p = Point.getSelected ();
