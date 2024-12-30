@@ -22,7 +22,6 @@ export class GUI
 	static ctx = null;
 
 	// Helper
-	static multipleSelect = false;
 	static drag = false;
 
 	// General infos
@@ -37,33 +36,33 @@ export class GUI
 		document.body.addEventListener ("keyup", GUI.keyUp);
 
 		// Buttons
-		GUI.hButtonShow = document.getElementById ("Show");
+		GUI.hButtonShow = document.getElementById ("navbar-buttons_show");
 		GUI.hButtonShow.addEventListener ("mousedown", GUI.showAll);
 		GUI.hButtonShow.addEventListener ("mouseup", GUI.hideAll);
 		GUI.hButtonShow.addEventListener ("mouseleave", GUI.hideAll);
 
-		GUI.hButtonLine = document.getElementById ("Line");
+		GUI.hButtonLine = document.getElementById ("sidebar-buttons_add_line");
 		GUI.hButtonLine.addEventListener ("click", Manager.createLine);
 
-		GUI.hButtonRect = document.getElementById ("Rect");
+		GUI.hButtonRect = document.getElementById ("sidebar-buttons_add_rect");
 		GUI.hButtonRect.addEventListener ("click", Manager.createRectangle);
 
-		GUI.hButtonClear = document.getElementById ("Clear");
+		GUI.hButtonClear = document.getElementById ("sidebar-buttons_clear");
 		GUI.hButtonClear.addEventListener ("click", GUI.buttonClear);
 
 		// Input fields
 		// - Numbers
-		GUI.hNumberGridSpanX = document.getElementById ("grid_span-x");
+		GUI.hNumberGridSpanX = document.getElementById ("sidebar-grid_properties_span_x");
 		GUI.hNumberGridSpanX.value = Grid.getSpanX ();
 		GUI.hNumberGridSpanX.addEventListener ("change", GUI.gridSpanXChange);
 
-		GUI.hNumberGridSpanY = document.getElementById ("grid_span-y");
+		GUI.hNumberGridSpanY = document.getElementById ("sidebar-grid_properties_span_y");
 		GUI.hNumberGridSpanY.value = Grid.getSpanY ();
 		GUI.hNumberGridSpanY.addEventListener ("change", GUI.gridSpanYChange);
 
 		// Canvas
 		GUI.canvas = document.getElementsByTagName ("canvas")[0];
-		GUI.canvas.addEventListener ("click", GUI.pointClick);
+		GUI.canvas.addEventListener ("click", Manager.mouseClick);
 		GUI.canvas.addEventListener ("mousedown", GUI.pointDown);
 		GUI.canvas.addEventListener ("mouseup", GUI.pointUp);
 		GUI.canvas.addEventListener ("mouseleave", GUI.pointUp);
@@ -81,7 +80,7 @@ export class GUI
 		Line.setContext (GUI.ctx);
 		Face.setContext (GUI.ctx);
 
-		GUI.debugPoints = document.getElementById ("Points");
+		GUI.debugPoints = document.getElementById ("navbar-message_points");
 		GUI.debugPoints.innerText = Point.getNumPoints().toString ();
 
 		GUI.status = document.getElementById ("Multi");
@@ -108,9 +107,9 @@ export class GUI
 	// Event handler
 	static keyDown (event)
 	{
-		if (event.ctrlKey == true && GUI.multipleSelect == false)
+		if (event.ctrlKey == true && Manager.multipleSelect == false)
 		{
-			GUI.multipleSelect = true;
+			Manager.multipleSelect = true;
 			GUI.status.innerText = "Multi select";
 		}
 	}
@@ -119,7 +118,7 @@ export class GUI
 	{
 		if (event.ctrlKey == false)
 		{
-			GUI.multipleSelect = false;
+			Manager.multipleSelect = false;
 			GUI.status.innerText = "Single select";
 		}
 	}
@@ -154,20 +153,7 @@ export class GUI
 
 	static pointClick (event)
 	{
-		const p = Point.getPointByPos (event.offsetX, event.offsetY, 15);
-
-		if (p != null)
-		{
-			p.select (GUI.multipleSelect);
-		}
-
-		else
-		{
-			if (GUI.multipleSelect == false)
-			{
-				Point.unselect ();
-			}
-		}
+		
 	}
 
 	static pointDown (event)
