@@ -280,7 +280,7 @@ export class Point
 	/////////////////////////////////////////
 
 	// Constructor of a single point
-	constructor (x, y)
+	constructor (x, y, add = true)
 	{
 		// Currently accepted coordinates
 		this.x = x;
@@ -308,13 +308,15 @@ export class Point
 		this.color = "yellow";
 
 		// Own unique id (should be unique)
-		this.id = Point.idCounter;
+		this.id = Point.idCounter++;
 
 		// If deprecated, replace with the point owning this id
 		this.newId = this.id;
 
-		Point.idCounter++;
-		Point.addPoint (this);
+		if (add == true)
+		{
+			Point.addPoint (this);
+		}
 	}
 
 	// Select this point
@@ -558,9 +560,9 @@ export class Point
 		Point.context.fill ();
 		Point.context.stroke ();
 
-		Point.context.fillStyle = "black";
-		Point.context.font = "24px sanserif";
-
-		Point.context.fillText (this.realX + ", " + this.realY, this.drawX + 20, this.drawY + 5);
+		// These lines draws the coordinates of the point on the canvas
+		//Point.context.fillStyle = "black";
+		//Point.context.font = "24px sanserif";
+		//Point.context.fillText (this.realX + ", " + this.realY, this.drawX + 20, this.drawY + 5);
 	}
 }
