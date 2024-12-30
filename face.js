@@ -40,6 +40,27 @@ export class Face
 		}
 	}
 
+	static getFaceByPos (x, y)
+	{
+		for (var i = 0; i < Face.faces.length; i++)
+		{
+			if (Face.faces[i].intersect (x, y) == true)
+			{
+				return Face.faces[i];
+			}
+		}
+
+		return null;
+	}
+
+	static unselect ()
+	{
+		for (var i = 0; i < Face.faces.length; i++)
+		{
+			Face.faces[i].unselect ();
+		}
+	}
+
 	static update ()
 	{
 		for (var i = 0; i > Face.faces.length; i++)
@@ -65,6 +86,7 @@ export class Face
 	constructor (lArray, add = true)
 	{
 		this.lines = lArray;
+		this.points = [];
 
 		this.id = Face.idCounter++;
 
@@ -75,8 +97,20 @@ export class Face
 			for (var i = 0; i < l; i++)
 			{
 				this.lines[i].setFaceId (this.id);
+
+				if (this.points.indexOf (this.lines[i].start) == -1)
+				{
+					this.points.push (this.lines[i].start);
+				}
+
+				if (this.points.indexOf (this.lines[i].end) == -1)
+				{
+					this.points.push (this.lines[i].end);
+				}
 			}
 		}
+
+		this.color = "lightgray";
 
 		if (add == true)
 		{
@@ -88,6 +122,40 @@ export class Face
 	{
 		l.setFaceId (this.id);
 		this.lines.push (l);
+	}
+
+	intersect (x, y)
+	{
+		var r = false;
+
+		for (var i = 0, j = this.points.length - 1; i < this.points.length; j = i++)
+		{
+			var xI = this.points[i].getX ();
+			var yI = this.points[i].getY ();
+
+			var xJ = this.points[j].getX ();
+			var yJ = this.points[j].getY ();
+
+			var intersect = ((yI > y) != (yJ > y)) && (x < (xJ - xI) * (y - yI) / (yJ - yI) + xI);
+
+			if (intersect)
+			{
+				r = !r;
+			}
+		}
+
+		return r;
+	}
+
+	select ()
+	{
+		console.log ("Face " + this.id + " selected");
+		this.color = "gray";
+	}
+
+	unselect ()
+	{
+		this.color = "lightgray";
 	}
 
 	update ()
@@ -128,7 +196,7 @@ export class Face
 				Line.context.lineTo (this.lines[i].end.getDrawnX (), this.lines[i].end.getDrawnY ());
 			}
 
-			Face.context.fillStyle = "lightgray";
+			Face.context.fillStyle = this.color;
 			Face.context.fill ();
 			Line.context.stroke ();
 		}
