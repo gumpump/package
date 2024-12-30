@@ -167,8 +167,6 @@ export class Point
 			return null;
 		}
 
-		console.log (Point.coordinateSystem[targetX][targetY]);
-
 		var p = null;
 
 		for (var i = 0; i < l; i++)
@@ -209,7 +207,6 @@ export class Point
 		if (p === undefined)
 		{
 			console.log ("Could not find point with id: " + id);
-			console.log (Point.points);
 
 			return null;
 		}
@@ -227,6 +224,11 @@ export class Point
 	static getSelected ()
 	{
 		return Point.currentPoints;
+	}
+
+	static getNumSelected ()
+	{
+		return Point.currentPoints.length;
 	}
 
 	// Draw all points
@@ -250,7 +252,7 @@ export class Point
 		{
 			for (var i = 0; i < l; i++)
 			{
-				Point.currentPoints[i].unselect (false);
+				Point.currentPoints[i].unselect ();
 			}
 		}
 
@@ -352,22 +354,10 @@ export class Point
 	}
 
 	// Unselect this point
-	unselect (remove)
+	unselect ()
 	{
 		this.selected = false;
 		console.log ("Point unselected");
-
-		if (remove == true)
-		{
-			const i = Point.currentPoints.indexOf (this);
-
-			if (i != -1)
-			{
-				Point.currentPoints.splice (i, 1);
-			}
-		}
-
-		this.update ();
 	}
 
 	// Move this point
@@ -490,7 +480,6 @@ export class Point
 	{
 		this.newId = id;
 		console.log ("Point " + this.id + " will be replaced by point " + this.newId);
-		console.log (Point.points);
 	}
 
 	// Get the new id
