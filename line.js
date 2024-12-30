@@ -59,6 +59,18 @@ export class Line
 		console.log ("Line removed");
 	}
 
+	static removeDeprecated ()
+	{
+		for (var i = 0; i < Line.lines.length; i++)
+		{
+			if (Line.lines[i].isDeprecated () == true)
+			{
+				Line.removeLine (Line.lines[i]);
+				i--;
+			}
+		}
+	}
+
 	static buildingFace (p)
 	{
 		var lArray = [];
@@ -134,14 +146,10 @@ export class Line
 
 	static update ()
 	{
+		Line.removeDeprecated ();
 		for (var i = 0; i < Line.lines.length; i++)
 		{
-			const r = Line.lines[i].update ();
-
-			if (r == -1)
-			{
-				i--;
-			}
+			Line.lines[i].update ();
 		}
 	}
 
@@ -236,6 +244,11 @@ export class Line
 	// Check if one of the points has been deprecated and have to be removed
 	update ()
 	{
+		if (this.isDeprecated () == true)
+		{
+			return;
+		}
+
 		if (this.start.isDeprecated () == true)
 		{
 			console.log ("Starting point " + this.start.getId () + " of line " + this.id + " is deprecated");
@@ -247,9 +260,7 @@ export class Line
 
 			if (idStart == -1)
 			{
-				Line.removeLine (this);
-
-				return -1;
+				return;
 			}
 
 			this.start = Point.getPointById (idStart);
@@ -268,9 +279,7 @@ export class Line
 
 			if (idEnd == -1)
 			{
-				Line.removeLine (this);
-
-				return -1;
+				return;
 			}
 
 			this.end = Point.getPointById (idEnd);
