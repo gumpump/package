@@ -7,7 +7,7 @@ At first I wanted to use C, but with it I would have to build the GUI with an ad
 ## Existing features
 
  - Creating rectangles
- - Add lines to existing nodes (named "points" in the code)
+ - Add lines to existing nodes
  - Show all existing nodes
  - Clear the canvas
  - Move single nodes or multiple nodes at once

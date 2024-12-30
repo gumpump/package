@@ -1,4 +1,4 @@
-import { Point } from "./point.js"
+import { Node } from "./node.js"
 //import { Line } from "./line.js"
 import { Face } from "./face.js"
 
@@ -24,7 +24,7 @@ export class Properties
 	// BUILDERS //
 	//////////////
 
-	static buildPointView (object)
+	static buildNodeView (object)
 	{
 		if (object == null)
 		{
@@ -33,9 +33,9 @@ export class Properties
 			return;
 		}
 
-		if ((object instanceof Point) == false)
+		if ((object instanceof Node) == false)
 		{
-			console.log ("Object is not a Point");
+			console.log ("Object is not a Node");
 
 			return;
 		}
@@ -50,7 +50,7 @@ export class Properties
 		}
 
 		var propHTML = "";
-		propHTML += '<p>Type: <span id="sidebar-object_properties_type">' + "Point" + '</span></p>';
+		propHTML += '<p>Type: <span id="sidebar-object_properties_type">' + "Node" + '</span></p>';
 		propHTML += '<p>ID: <span id="sidebar-object_properties_id">' + object.getId () + '</span></p>';
 
 		hTarget.innerHTML = propHTML;

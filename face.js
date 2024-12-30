@@ -99,7 +99,7 @@ export class Face
 	constructor (lArray, add = true)
 	{
 		this.lines = lArray;
-		this.points = [];
+		this.nodes = [];
 
 		this.id = Face.idCounter++;
 
@@ -111,14 +111,14 @@ export class Face
 			{
 				this.lines[i].setFaceId (this.id);
 
-				if (this.points.indexOf (this.lines[i].start) == -1)
+				if (this.nodes.indexOf (this.lines[i].start) == -1)
 				{
-					this.points.push (this.lines[i].start);
+					this.nodes.push (this.lines[i].start);
 				}
 
-				if (this.points.indexOf (this.lines[i].end) == -1)
+				if (this.nodes.indexOf (this.lines[i].end) == -1)
 				{
-					this.points.push (this.lines[i].end);
+					this.nodes.push (this.lines[i].end);
 				}
 			}
 		}
@@ -140,9 +140,9 @@ export class Face
 
 	setRelPos (x, y)
 	{
-		for (var i = 0; i < this.points.length; i++)
+		for (var i = 0; i < this.nodes.length; i++)
 		{
-			this.points[i].setRelPos (x, y);
+			this.nodes[i].setRelPos (x, y);
 		}
 	}
 
@@ -150,13 +150,13 @@ export class Face
 	{
 		var r = false;
 
-		for (var i = 0, j = this.points.length - 1; i < this.points.length; j = i++)
+		for (var i = 0, j = this.nodes.length - 1; i < this.nodes.length; j = i++)
 		{
-			var xI = this.points[i].getX ();
-			var yI = this.points[i].getY ();
+			var xI = this.nodes[i].getX ();
+			var yI = this.nodes[i].getY ();
 
-			var xJ = this.points[j].getX ();
-			var yJ = this.points[j].getY ();
+			var xJ = this.nodes[j].getX ();
+			var yJ = this.nodes[j].getY ();
 
 			var intersect = ((yI > y) != (yJ > y)) && (x < (xJ - xI) * (y - yI) / (yJ - yI) + xI);
 

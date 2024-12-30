@@ -1,4 +1,4 @@
-import { Point } from "./point.js"
+import { Node } from "./node.js"
 
 export class Line
 {
@@ -10,7 +10,7 @@ export class Line
 
 	static lines = [];
 
-	static pointIds = [];
+	static nodeIds = [];
 
 	// Set context for all lines to use
 	static setContext (ctx)
@@ -27,16 +27,16 @@ export class Line
 
 		const startId = l.start.getId ();
 
-		if (Line.pointIds.includes (startId) == false)
+		if (Line.nodeIds.includes (startId) == false)
 		{
-			Line.pointIds.push (startId);
+			Line.nodeIds.push (startId);
 		}
 
 		const endId = l.end.getId ();
 
-		if (Line.pointIds.includes (endId) == false)
+		if (Line.nodeIds.includes (endId) == false)
 		{
-			Line.pointIds.push (endId);
+			Line.nodeIds.push (endId);
 		}
 
 		else
@@ -74,7 +74,7 @@ export class Line
 	static buildingFace (p)
 	{
 		var lArray = [];
-		var nextL = Line.getLineByStartPoint (p);
+		var nextL = Line.getLineByStartNode (p);
 
 		if (nextL === null)
 		{
@@ -85,7 +85,7 @@ export class Line
 
 		while (nextL.end != p)
 		{
-			var nextL = Line.getLineByStartPoint (nextL.end);
+			var nextL = Line.getLineByStartNode (nextL.end);
 			lArray.push (nextL);
 		}
 
@@ -102,10 +102,10 @@ export class Line
 		}
 	}
 
-	// If there is more than one line with this starting point,
+	// If there is more than one line with this starting node,
 	// shit will hit the fan
 	// TODO: Create a solution for that, maybe return an array
-	static getLineByStartPoint (p)
+	static getLineByStartNode (p)
 	{
 		const l = Line.lines.length;
 
@@ -125,10 +125,10 @@ export class Line
 		return null;
 	}
 
-	// If there is more than one line with this ending point,
+	// If there is more than one line with this ending node,
 	// shit will hit the fan
 	// TODO: Create a solution for that, maybe return an array
-	static getLineByEndPoint (p)
+	static getLineByEndNode (p)
 	{
 		const l = Line.lines.length;
 
@@ -177,13 +177,13 @@ export class Line
 	/////////////////////////////////////////
 
 	// Constructor
-	constructor (pointStart, pointEnd, add = true)
+	constructor (nodeStart, nodeEnd, add = true)
 	{
-		// Start point
-		this.start = pointStart;
+		// Start node
+		this.start = nodeStart;
 
-		// End point
-		this.end = pointEnd;
+		// End node
+		this.end = nodeEnd;
 
 		this.faceId = 0;
 
@@ -195,31 +195,31 @@ export class Line
 		}
 	}
 
-	// Set start point (actual reference to a new or existing point)
-	setStartPoint (p)
+	// Set start node (actual reference to a new or existing node)
+	setStartNode (p)
 	{
 		this.start = p;
 	}
 
-	// Set position of start point
-	setStartPointPos (x, y)
+	// Set position of start node
+	setStartNodePos (x, y)
 	{
 		this.start.setPos (x, y);
 	}
 
-	// Set end point (actual reference to a new or existing point)
-	setEndPoint (p)
+	// Set end node (actual reference to a new or existing node)
+	setEndNode (p)
 	{
 		this.end = p;
 	}
 
-	// Set position of end point
-	setEndPointPos (x, y)
+	// Set position of end node
+	setEndNodePos (x, y)
 	{
 		this.end.setPos (x, y);
 	}
 
-	// Get the length of the line (distance between start point and end point)
+	// Get the length of the line (distance between start node and end node)
 	getLength ()
 	{
 		return Math.hypot (this.end.getX () - this.start.getX (), this.end.getY () - this.start.getY ());
@@ -245,7 +245,7 @@ export class Line
 		return false;
 	}
 
-	// Check if one of the points has been deprecated and have to be removed
+	// Check if one of the nodes has been deprecated and have to be removed
 	update ()
 	{
 		if (this.isDeprecated () == true)
@@ -255,40 +255,40 @@ export class Line
 
 		if (this.start.isDeprecated () == true)
 		{
-			console.log ("Starting point " + this.start.getId () + " of line " + this.id + " is deprecated");
+			console.log ("Starting node " + this.start.getId () + " of line " + this.id + " is deprecated");
 			const idStart = this.start.getNewId ();
-			console.log ("New starting point of line " + this.id + " has the id: " + idStart);
+			console.log ("New starting node of line " + this.id + " has the id: " + idStart);
 			this.start = null;
 
-			console.log ("Starting point of line " + this.id + " removed");
+			console.log ("Starting node of line " + this.id + " removed");
 
 			if (idStart == -1)
 			{
 				return;
 			}
 
-			this.start = Point.getPointById (idStart);
+			this.start = Node.getNodeById (idStart);
 
-			console.log ("New starting point " + idStart + " of line " + this.id + " set");
+			console.log ("New starting node " + idStart + " of line " + this.id + " set");
 		}
 
 		if (this.end.isDeprecated () == true)
 		{
-			console.log ("Ending point " + this.end.getId () + " of line " + this.id + " is deprecated");
+			console.log ("Ending node " + this.end.getId () + " of line " + this.id + " is deprecated");
 			const idEnd = this.end.getNewId ();
-			console.log ("New ending point of line " + this.id + " has the id: " + idEnd);
+			console.log ("New ending node of line " + this.id + " has the id: " + idEnd);
 			this.end = null;
 
-			console.log ("Ending point of line " + this.id + " removed");
+			console.log ("Ending node of line " + this.id + " removed");
 
 			if (idEnd == -1)
 			{
 				return;
 			}
 
-			this.end = Point.getPointById (idEnd);
+			this.end = Node.getNodeById (idEnd);
 
-			console.log ("New ending point of line " + this.id + " set");
+			console.log ("New ending node of line " + this.id + " set");
 		}
 	}
 

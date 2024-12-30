@@ -1,5 +1,5 @@
 import { Grid } from "./grid.js"
-import { Point } from "./point.js"
+import { Node } from "./node.js"
 import { Line } from "./line.js"
 import { Face } from "./face.js"
 import { Manager } from "./manager.js"
@@ -28,7 +28,7 @@ export class GUI
 	static status = null;
 
 	// Debug infos
-	static debugPoints = null;
+	static debugNodes = null;
 
 	static create ()
 	{
@@ -63,10 +63,10 @@ export class GUI
 		// Canvas
 		GUI.canvas = document.getElementsByTagName ("canvas")[0];
 		GUI.canvas.addEventListener ("click", Manager.mouseClick);
-		GUI.canvas.addEventListener ("mousedown", GUI.pointDown);
-		GUI.canvas.addEventListener ("mouseup", GUI.pointUp);
-		GUI.canvas.addEventListener ("mouseleave", GUI.pointUp);
-		GUI.canvas.addEventListener ("mousemove", GUI.pointMove);
+		GUI.canvas.addEventListener ("mousedown", GUI.nodeDown);
+		GUI.canvas.addEventListener ("mouseup", GUI.nodeUp);
+		GUI.canvas.addEventListener ("mouseleave", GUI.nodeUp);
+		GUI.canvas.addEventListener ("mousemove", GUI.nodeMove);
 
 		GUI.canvasRect = GUI.canvas.getBoundingClientRect ();
 		GUI.canvas.width = GUI.canvasRect.width;
@@ -76,12 +76,12 @@ export class GUI
 		Manager.setDimension (GUI.canvas.width, GUI.canvas.height);
 
 		Grid.setContext (GUI.ctx, GUI.canvas.width, GUI.canvas.height);
-		Point.setContext (GUI.ctx, GUI.canvas.width, GUI.canvas.height);
+		Node.setContext (GUI.ctx, GUI.canvas.width, GUI.canvas.height);
 		Line.setContext (GUI.ctx);
 		Face.setContext (GUI.ctx);
 
-		GUI.debugPoints = document.getElementById ("navbar-message_points");
-		GUI.debugPoints.innerText = Point.getNumPoints().toString ();
+		GUI.debugNodes = document.getElementById ("navbar-message_nodes");
+		GUI.debugNodes.innerText = Node.getNumNodes().toString ();
 
 		GUI.status = document.getElementById ("Multi");
 		GUI.status.innerText = "Single select";
@@ -98,10 +98,10 @@ export class GUI
 		Grid.draw ();
 		Face.draw ();
 		Line.draw ();
-		Point.draw ();
+		Node.draw ();
 		requestAnimationFrame (GUI.draw);
 		// Debug infos
-		GUI.debugPoints.innerText = Point.getNumPoints().toString ();
+		GUI.debugNodes.innerText = Node.getNumNodes().toString ();
 	}
 
 	// Event handler
@@ -125,17 +125,17 @@ export class GUI
 
 	static showAll (event)
 	{
-		Point.showAll ();
+		Node.showAll ();
 	}
 
 	static hideAll (event)
 	{
-		Point.hideAll ();
+		Node.hideAll ();
 	}
 
 	static buttonClear ()
 	{
-		Point.clear ();
+		Node.clear ();
 		Manager.update ();
 	}
 
@@ -151,9 +151,9 @@ export class GUI
 		Grid.update ();
 	}
 
-	static pointDown (event)
+	static nodeDown (event)
 	{
-		const p = Point.getSelected ();
+		const p = Node.getSelected ();
 		const l = p.length;
 
 		if (l > 0)
@@ -165,7 +165,6 @@ export class GUI
 					continue;
 				}
 
-				p[i].move ();
 				GUI.drag = "p";
 
 				return;
@@ -187,18 +186,18 @@ export class GUI
 			}
 		}
 
-		//Point.showAll ();
+		//Node.showAll ();
 		GUI.drag = "o";
 	}
 
-	static pointUp (event)
+	static nodeUp (event)
 	{
-		const p = Point.getSelected ();
+		const p = Node.getSelected ();
 		const l = p.length;
 
 		if (l == 0)
 		{
-			Point.hideAll ();
+			Node.hideAll ();
 		}
 
 		GUI.drag = "o";
@@ -206,7 +205,7 @@ export class GUI
 		Manager.update ();
 	}
 
-	static pointMove (event)
+	static nodeMove (event)
 	{
 		switch (GUI.drag)
 		{
@@ -217,7 +216,7 @@ export class GUI
 
 			case "p":
 			{
-				const p = Point.getSelected ();
+				const p = Node.getSelected ();
 				const l = p.length;
 
 				if (l > 0)

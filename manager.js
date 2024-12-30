@@ -1,5 +1,5 @@
 import { Grid } from "./grid.js"
-import { Point } from "./point.js"
+import { Node } from "./node.js"
 import { Line } from "./line.js"
 import { Face } from "./face.js"
 import { Properties } from "./properties.js"
@@ -23,9 +23,9 @@ export class Manager
 	
 	static createLine (event)
 	{
-		if (Point.isSelected () == true)
+		if (Node.isSelected () == true)
 		{
-			const p = Point.getSelected ();
+			const p = Node.getSelected ();
 			const l = p.length;
 
 			for (var i = 0; i < l; i++)
@@ -34,9 +34,9 @@ export class Manager
 				const pY = p[i].getY ();
 				const offX = (pX + 50 > Manager.canvasWidth) ? -50 : 50;
 				const offY = (pY + 50 > Manager.canvasHeight) ? -50 : 50;
-				const newP = new Point (pX + offX, pY + offY);
+				const newP = new Node (pX + offX, pY + offY);
 
-				Point.unselect ();
+				Node.unselect ();
 				newP.select ();
 
 				Line.addLine (new Line (p[i], newP));
@@ -51,10 +51,10 @@ export class Manager
 		const middleWidth = Manager.canvasWidth / 2;
 		const middleHeight = Manager.canvasHeight / 2;
 
-		const pUpperLeft = new Point (middleWidth - 50, middleHeight - 50);
-		const pUpperRight = new Point (middleWidth - 50, middleHeight + 50);
-		const pLowerRight = new Point (middleWidth + 50, middleHeight + 50);
-		const pLowerLeft = new Point (middleWidth + 50, middleHeight - 50);
+		const pUpperLeft = new Node (middleWidth - 50, middleHeight - 50);
+		const pUpperRight = new Node (middleWidth - 50, middleHeight + 50);
+		const pLowerRight = new Node (middleWidth + 50, middleHeight + 50);
+		const pLowerLeft = new Node (middleWidth + 50, middleHeight - 50);
 
 		Line.addLine (new Line (pUpperLeft, pUpperRight, false));
 		Line.addLine (new Line (pUpperRight, pLowerRight, false));
@@ -75,15 +75,15 @@ export class Manager
 
 	static mouseClick (event)
 	{
-		const p = Point.getPointByPos (event.offsetX, event.offsetY, 15);
+		const p = Node.getNodeByPos (event.offsetX, event.offsetY, 15);
 
 		if (p != null)
 		{
 			p.select (Manager.multipleSelect);
 
-			if (Point.getNumSelected () == 1)
+			if (Node.getNumSelected () == 1)
 			{
-				Properties.buildPointView (p);
+				Properties.buildNodeView (p);
 			}
 
 			else
@@ -106,7 +106,7 @@ export class Manager
 
 			Properties.buildFaceView (f);
 
-			Point.unselect ();
+			Node.unselect ();
 
 			return;
 		}
@@ -115,7 +115,7 @@ export class Manager
 
 		if (Manager.multipleSelect == false)
 		{
-			Point.unselect ();
+			Node.unselect ();
 		}
 
 		Properties.clear ();
@@ -125,7 +125,7 @@ export class Manager
 	{
 		Face.update ();
 		Line.update ();
-		Point.update ();
+		Node.update ();
 
 		// Position of Grid.update unclear
 	}
