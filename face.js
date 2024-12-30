@@ -23,7 +23,7 @@ export class Face
 
 		Face.faces.push (f);
 
-		console.log ("Face added");
+		console.log ("Face " + f.id + " added");
 	}
 
 	static removeFace (f)
@@ -145,6 +145,11 @@ export class Face
 		}
 
 		return r;
+	}
+
+	getId ()
+	{
+		return this.id;
 	}
 
 	select ()
