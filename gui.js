@@ -165,7 +165,7 @@ export class GUI
 					continue;
 				}
 
-				GUI.drag = "p";
+				GUI.drag = "n";
 
 				return;
 			}
@@ -214,7 +214,7 @@ export class GUI
 				return;
 			} break;
 
-			case "p":
+			case "n":
 			{
 				const p = Node.getSelected ();
 				const l = p.length;
