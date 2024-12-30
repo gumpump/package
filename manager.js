@@ -2,11 +2,14 @@ import { Grid } from "./grid.js"
 import { Point } from "./point.js"
 import { Line } from "./line.js"
 import { Face } from "./face.js"
+import { Properties } from "./properties.js"
 
 export class Manager
 {
 	static canvasWidth = 0;
 	static canvasHeight = 0;
+
+	static multipleSelect = false;
 
 	static setDimension (w, h)
 	{
@@ -14,7 +17,10 @@ export class Manager
 		Manager.canvasHeight = h;
 	}
 
-	// Event handlers
+	///////////////////////////////////
+	// BUTTON-RELATED EVENT HANDLERS //
+	///////////////////////////////////
+	
 	static createLine (event)
 	{
 		if (Point.isSelected () == true)
@@ -56,6 +62,51 @@ export class Manager
 		}
 
 		Manager.update ();
+	}
+
+	//////////////////////////////////
+	// MOUSE-RELATED EVENT HANDLERS //
+	//////////////////////////////////
+
+	static mouseClick (event)
+	{
+		const p = Point.getPointByPos (event.offsetX, event.offsetY, 15);
+
+		if (p != null)
+		{
+			p.select (Manager.multipleSelect);
+
+			if (Point.getNumSelected () == 1)
+			{
+				Properties.buildPointView (p);
+			}
+
+			Face.unselect ();
+
+			return;
+		}
+
+		const f = Face.getFaceByPos (event.offsetX, event.offsetY);
+
+		if (f != null)
+		{
+			f.select ();
+
+			Properties.buildFaceView (f);
+
+			Point.unselect ();
+
+			return;
+		}
+
+		Face.unselect ();
+
+		if (Manager.multipleSelect == false)
+		{
+			Point.unselect ();
+		}
+
+		Properties.clear ();
 	}
 
 	static update ()
