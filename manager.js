@@ -34,7 +34,12 @@ export class Manager
 				const pY = p[i].getY ();
 				const offX = (pX + 50 > Manager.canvasWidth) ? -50 : 50;
 				const offY = (pY + 50 > Manager.canvasHeight) ? -50 : 50;
-				Line.addLine (new Line (p[i], new Point (pX + offX, pY + offY)));
+				const newP = new Point (pX + offX, pY + offY);
+
+				Point.unselect ();
+				newP.select ();
+
+				Line.addLine (new Line (p[i], newP));
 			}
 		}
 
@@ -90,6 +95,8 @@ export class Manager
 
 			return;
 		}
+
+		Face.unselect ();
 
 		const f = Face.getFaceByPos (event.offsetX, event.offsetY);
 
