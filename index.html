@@ -5,28 +5,31 @@
 	<body>
 	<div>
 		<nav>
-			<div><span id="Points"></span> points</div>
-			<button id="Show">Show all</button>
+			<div><span id="navbar-message_points"></span> points</div>
+			<button id="navbar-buttons_show">Show all</button>
 		</nav>
-		<div id="Middle">
-			<div id="Left">
-				<div class="Sidebar_Upper">
-					<button id="Line">Add line</button>
-					<button id="Rect">Add rectangle</button>
+		<div id="screen">
+			<div id="sidebar_left">
+				<div class="sidebar-buttons_add">
+					<button id="sidebar-buttons_add_line">Add line</button>
+					<button id="sidebar-buttons_add_rect">Add rectangle</button>
 				</div>
-				<button id="Clear">Clear</button>
-				<p class="DebugMessage">You may have to press "Clear" more than once. It's a known bug.</p>
+				<button id="sidebar-buttons_clear">Clear</button>
+				<p class="sidebar-message_debug">You may have to press "Clear" more than once. It's a known bug.</p>
 			</div>
 			<canvas></canvas>
-			<div id="Right">
-				<p id="Multi" class="InfoMessage"></p>
+			<div id="sidebar_right">
+				<p id="Multi" class="sidebar-message_info"></p>
 				<div>
-					<label for="grid_span-x" class="InfoMessage">Grid width</label>
-					<input type="number" id="grid_span-x" class="number_input" min="10" max="100">
+					<label for="sidebar-grid_properties_span_x" class="sidebar-message_info">Grid width</label>
+					<input type="number" id="sidebar-grid_properties_span_x" min="10" max="100" disabled>
 				</div>
 				<div>
-					<label for="grid_span-y" class="InfoMessage">Grid height</label>
-					<input type="number" id="grid_span-y" class="number_input" min="10" max="100">
+					<label for="sidebar-grid_properties_span_y" class="sidebar-message_info">Grid height</label>
+					<input type="number" id="sidebar-grid_properties_span_y" min="10" max="100" disabled>
+				</div>
+				<hr>
+				<div id="sidebar-object_properties">
 				</div>
 			</div>
 		</div>
