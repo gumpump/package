@@ -18,6 +18,7 @@ export class Line
 		Line.context = ctx;
 	}
 
+	// If a face is detected, this function returns a list of lines representing said face
 	static addLine (l)
 	{
 		Line.lines.push (l);
@@ -40,7 +41,9 @@ export class Line
 
 		else
 		{
-			console.log ("Potential area detected by ending point");
+			console.log ("Potential face detected by ending point");
+
+			return Line.buildingFace (l.end);
 		}
 	}
 
@@ -56,15 +59,81 @@ export class Line
 		console.log ("Line removed");
 	}
 
-	static update ()
+	static buildingFace (p)
+	{
+		var lArray = [];
+		var nextL = Line.getLineByStartPoint (p);
+
+		if (nextL === null)
+		{
+			return null;
+		}
+
+		lArray.push (nextL);
+
+		while (nextL.end != p)
+		{
+			var nextL = Line.getLineByStartPoint (nextL.end);
+			lArray.push (nextL);
+		}
+
+		if (lArray.length > 0)
+		{
+			console.log (lArray);
+
+			return lArray;
+		}
+
+		else
+		{
+			console.log ("Could not collect lines for face");
+
+			return null;
+		}
+	}
+
+	static getLineByStartPoint (p)
 	{
 		const l = Line.lines.length;
 
-		if (l == 0)
+		if (l == -1)
 		{
 			return;
 		}
 
+		for (var i = 0; i < l; i++)
+		{
+			if (Line.lines[i].start == p)
+			{
+				return Line.lines[i];
+			}
+		}
+
+		return null;
+	}
+
+	static getLineByEndPoint (p)
+	{
+		const l = Line.lines.length;
+
+		if (l == -1)
+		{
+			return;
+		}
+
+		for (var i = 0; i < l; i++)
+		{
+			if (Line.lines[i].end == p)
+			{
+				return Line.lines[i];
+			}
+		}
+
+		return null;
+	}
+
+	static update ()
+	{
 		for (var i = 0; i < Line.lines.length; i++)
 		{
 			const r = Line.lines[i].update ();
@@ -78,12 +147,6 @@ export class Line
 
 	static draw ()
 	{
-		if (Point.hasChanged () == true)
-		{
-			Line.update ();
-			Point.setChange (false);
-		}
-
 		const l = Line.lines.length;
 
 		if (l == 0)
@@ -102,7 +165,7 @@ export class Line
 	/////////////////////////////////////////
 
 	// Constructor
-	constructor (pointStart, pointEnd)
+	constructor (pointStart, pointEnd, add = true)
 	{
 		// Start point
 		this.start = pointStart;
@@ -110,8 +173,14 @@ export class Line
 		// End point
 		this.end = pointEnd;
 
-		this.id = Line.idCounter;
-		Line.idCounter++;
+		this.faceId = 0;
+
+		this.id = Line.idCounter++;
+
+		if (add == true)
+		{
+			Line.addLine (this);
+		}
 	}
 
 	// Set start point (actual reference to a new or existing point)
@@ -144,6 +213,26 @@ export class Line
 		return Math.hypot (this.end.getX () - this.start.getX (), this.end.getY () - this.start.getY ());
 	}
 
+	setFaceId (id)
+	{
+		this.faceId = id;
+	}
+
+	getFaceId ()
+	{
+		return this.faceId;
+	}
+
+	isDeprecated ()
+	{
+		if (this.start == null || this.end == null)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	// Check if one of the points has been deprecated and have to be removed
 	update ()
 	{
@@ -152,7 +241,6 @@ export class Line
 			console.log ("Starting point " + this.start.getId () + " of line " + this.id + " is deprecated");
 			const idStart = this.start.getNewId ();
 			console.log ("New starting point of line " + this.id + " has the id: " + idStart);
-			Point.removePoint (this.start);
 			this.start = null;
 
 			console.log ("Starting point of line " + this.id + " removed");
@@ -174,7 +262,6 @@ export class Line
 			console.log ("Ending point " + this.end.getId () + " of line " + this.id + " is deprecated");
 			const idEnd = this.end.getNewId ();
 			console.log ("New ending point of line " + this.id + " has the id: " + idEnd);
-			Point.removePoint (this.end);
 			this.end = null;
 
 			console.log ("Ending point of line " + this.id + " removed");
@@ -195,6 +282,11 @@ export class Line
 	// Draw the line
 	draw ()
 	{
+		if (this.faceId != 0)
+		{
+			return;
+		}
+
 		const startX = this.start.getDrawnX ();
 		const startY = this.start.getDrawnY ();
 		const endX = this.end.getDrawnX ();
