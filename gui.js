@@ -1,6 +1,7 @@
 import { Grid } from "./grid.js"
 import { Point } from "./point.js"
 import { Line } from "./line.js"
+import { Face } from "./face.js"
 
 export class GUI
 {
@@ -75,6 +76,7 @@ export class GUI
 		Grid.setContext (GUI.ctx, GUI.canvas.width, GUI.canvas.height);
 		Point.setContext (GUI.ctx, GUI.canvas.width, GUI.canvas.height);
 		Line.setContext (GUI.ctx);
+		Face.setContext (GUI.ctx);
 
 		GUI.debugPoints = document.getElementById ("Points");
 		GUI.debugPoints.innerText = Point.getNumPoints().toString ();
@@ -161,10 +163,15 @@ export class GUI
 		const pLowerRight = new Point (middleWidth + 50, middleHeight + 50);
 		const pLowerLeft = new Point (middleWidth + 50, middleHeight - 50);
 
-		Line.addLine (new Line (pUpperLeft, pUpperRight));
-		Line.addLine (new Line (pUpperRight, pLowerRight));
-		Line.addLine (new Line (pLowerRight, pLowerLeft));
-		Line.addLine (new Line (pLowerLeft, pUpperLeft));
+		Line.addLine (new Line (pUpperLeft, pUpperRight, false));
+		Line.addLine (new Line (pUpperRight, pLowerRight, false));
+		Line.addLine (new Line (pLowerRight, pLowerLeft, false));
+		const lArray = Line.addLine (new Line (pLowerLeft, pUpperLeft, false));
+
+		if (lArray != null)
+		{
+			
+		}
 	}
 
 	static buttonClear ()
