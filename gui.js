@@ -2,6 +2,7 @@ import { Grid } from "./grid.js"
 import { Point } from "./point.js"
 import { Line } from "./line.js"
 import { Face } from "./face.js"
+import { Manager } from "./manager.js"
 
 export class GUI
 {
@@ -42,10 +43,10 @@ export class GUI
 		GUI.hButtonShow.addEventListener ("mouseleave", GUI.hideAll);
 
 		GUI.hButtonLine = document.getElementById ("Line");
-		GUI.hButtonLine.addEventListener ("click", GUI.buttonLine);
+		GUI.hButtonLine.addEventListener ("click", Manager.createLine);
 
 		GUI.hButtonRect = document.getElementById ("Rect");
-		GUI.hButtonRect.addEventListener ("click", GUI.buttonRect);
+		GUI.hButtonRect.addEventListener ("click", Manager.createRectangle);
 
 		GUI.hButtonClear = document.getElementById ("Clear");
 		GUI.hButtonClear.addEventListener ("click", GUI.buttonClear);
@@ -73,6 +74,8 @@ export class GUI
 		GUI.canvas.height = GUI.canvasRect.height;
 		GUI.ctx = GUI.canvas.getContext ("2d");
 
+		Manager.setDimension (GUI.canvas.width, GUI.canvas.height);
+
 		Grid.setContext (GUI.ctx, GUI.canvas.width, GUI.canvas.height);
 		Point.setContext (GUI.ctx, GUI.canvas.width, GUI.canvas.height);
 		Line.setContext (GUI.ctx);
@@ -94,6 +97,7 @@ export class GUI
 	{
 		GUI.ctx.clearRect (0, 0, GUI.canvas.width, GUI.canvas.height);
 		Grid.draw ();
+		Face.draw ();
 		Line.draw ();
 		Point.draw ();
 		requestAnimationFrame (GUI.draw);
@@ -130,54 +134,10 @@ export class GUI
 		Point.hideAll ();
 	}
 
-	static buttonLine (event)
-	{
-		if (Point.isSelected () == true)
-		{
-			const p = Point.getSelected ();
-			const l = p.length;
-
-			if (l == 0)
-			{
-				return;
-			}
-
-			for (var i = 0; i < l; i++)
-			{
-				const pX = p[i].getX ();
-				const pY = p[i].getY ();
-				const offX = (pX + 50 > GUI.canvas.width) ? -50 : 50;
-				const offY = (pY + 50 > GUI.canvas.height) ? -50 : 50;
-				Line.addLine (new Line (p[i], new Point (pX + offX, pY + offY)));
-			}
-		}
-	}
-
-	static buttonRect (event)
-	{
-		const middleWidth = GUI.canvas.width / 2;
-		const middleHeight = GUI.canvas.height / 2;
-
-		const pUpperLeft = new Point (middleWidth - 50, middleHeight - 50);
-		const pUpperRight = new Point (middleWidth - 50, middleHeight + 50);
-		const pLowerRight = new Point (middleWidth + 50, middleHeight + 50);
-		const pLowerLeft = new Point (middleWidth + 50, middleHeight - 50);
-
-		Line.addLine (new Line (pUpperLeft, pUpperRight, false));
-		Line.addLine (new Line (pUpperRight, pLowerRight, false));
-		Line.addLine (new Line (pLowerRight, pLowerLeft, false));
-		const lArray = Line.addLine (new Line (pLowerLeft, pUpperLeft, false));
-
-		if (lArray != null)
-		{
-			
-		}
-	}
-
 	static buttonClear ()
 	{
 		Point.clear ();
-		Line.update ();
+		Manager.update ();
 	}
 
 	static gridSpanXChange (event)
@@ -251,7 +211,7 @@ export class GUI
 
 		GUI.drag = false;
 
-		Line.update ();
+		Manager.update ();
 	}
 
 	static pointMove (event)
