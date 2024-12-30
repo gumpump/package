@@ -11,18 +11,17 @@ At first I wanted to use C, but with it I would have to build the GUI with an ad
  - Show all existing nodes
  - Clear the canvas
  - Move single nodes or multiple nodes at once
+ - Select and move surfaces (Only rectangles at the moment)
 
 ## Planned features
 
  - Creating single nodes independently from lines
  - Creating round lines
- - Select whole areas
  - Interactive input fields for changing coordinates of nodes
  - Export to image or even pdf
  - Interactive input fields for changing resolution of grid
  - Toggling grid on and off
 
  ## Known bugs
- - If you move multiple nodes at once over multiple other nodes to merge them, they are all gone and it messes up the internal nodes list.
- The counter shows more nodes than you can see on the canvas and the "Show all"-button doesn't work.
  - If you move multiple nodes at once they snap to the grid differently so their surface become "corrupted".
+This doesn't happen, if you move a face (I don't know why)
