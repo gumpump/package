@@ -146,7 +146,7 @@ export class GUI
 				const pY = p[i].getY ();
 				const offX = (pX + 50 > GUI.canvas.width) ? -50 : 50;
 				const offY = (pY + 50 > GUI.canvas.height) ? -50 : 50;
-				Line.addLine (new Line (GUI.ctx, p[i], new Point (pX + offX, pY + offY)));
+				Line.addLine (new Line (p[i], new Point (pX + offX, pY + offY)));
 			}
 		}
 	}
@@ -161,10 +161,10 @@ export class GUI
 		const pLowerRight = new Point (middleWidth + 50, middleHeight + 50);
 		const pLowerLeft = new Point (middleWidth + 50, middleHeight - 50);
 
-		Line.addLine (new Line (GUI.ctx, pUpperLeft, pUpperRight));
-		Line.addLine (new Line (GUI.ctx, pUpperRight, pLowerRight));
-		Line.addLine (new Line (GUI.ctx, pLowerRight, pLowerLeft));
-		Line.addLine (new Line (GUI.ctx, pLowerLeft, pUpperLeft));
+		Line.addLine (new Line (pUpperLeft, pUpperRight));
+		Line.addLine (new Line (pUpperRight, pLowerRight));
+		Line.addLine (new Line (pLowerRight, pLowerLeft));
+		Line.addLine (new Line (pLowerLeft, pUpperLeft));
 	}
 
 	static buttonClear ()

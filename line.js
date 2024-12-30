@@ -31,11 +31,6 @@ export class Line
 			Line.pointIds.push (startId);
 		}
 
-		else
-		{
-			console.log ("Potential area detected");
-		}
-
 		const endId = l.end.getId ();
 
 		if (Line.pointIds.includes (endId) == false)
@@ -45,7 +40,7 @@ export class Line
 
 		else
 		{
-			console.log ("Potential area detected");
+			console.log ("Potential area detected by ending point");
 		}
 	}
 
@@ -70,13 +65,14 @@ export class Line
 			return;
 		}
 
-		// While going through the array, some lines may remove themselves.
-		// The iterator goes on, even though it may goes beyond the new boundaries
-		// Cheap fix: Use Line.lines.length instead of l
-		// TODO: Find another way to cycle through this array
 		for (var i = 0; i < Line.lines.length; i++)
 		{
-			Line.lines[i].update ();
+			const r = Line.lines[i].update ();
+
+			if (r == -1)
+			{
+				i--;
+			}
 		}
 	}
 
@@ -106,16 +102,13 @@ export class Line
 	/////////////////////////////////////////
 
 	// Constructor
-	constructor (ctx, pointStart, pointEnd)
+	constructor (pointStart, pointEnd)
 	{
 		// Start point
 		this.start = pointStart;
 
 		// End point
 		this.end = pointEnd;
-
-		// Main context
-		this.context = ctx;
 
 		this.id = Line.idCounter;
 		Line.idCounter++;
@@ -168,7 +161,7 @@ export class Line
 			{
 				Line.removeLine (this);
 
-				return;
+				return -1;
 			}
 
 			this.start = Point.getPointById (idStart);
@@ -190,7 +183,7 @@ export class Line
 			{
 				Line.removeLine (this);
 
-				return;
+				return -1;
 			}
 
 			this.end = Point.getPointById (idEnd);
@@ -207,14 +200,14 @@ export class Line
 		const endX = this.end.getDrawnX ();
 		const endY = this.end.getDrawnY ();
 
-		this.context.beginPath ();
-		this.context.moveTo (startX, startY);
-		this.context.lineTo (endX, endY);
-		this.context.stroke ();
+		Line.context.beginPath ();
+		Line.context.moveTo (startX, startY);
+		Line.context.lineTo (endX, endY);
+		Line.context.stroke ();
 
-		this.context.fillStyle = "black";
-		this.context.font = "24px sanserif";
+		Line.context.fillStyle = "black";
+		Line.context.font = "24px sanserif";
 
-		this.context.fillText (this.id, startX + ((endX - startX) / 2) + 5, startY + ((endY - startY) / 2) + 5);
+		Line.context.fillText (this.id, startX + ((endX - startX) / 2) + 5, startY + ((endY - startY) / 2) + 5);
 	}
 }
