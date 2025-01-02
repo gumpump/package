@@ -39,9 +39,9 @@ export class Manager
 
 				nArray.push (new Node (pX + offX, pY + offY));
 				Node.unselect ();
-				nArray[0].select ();
+				nArray[1].select ();
 
-				Face.addFace (new Face (nArray));
+				Face.addFace (new Face (nArray, false));
 			}
 		}
 
@@ -60,7 +60,7 @@ export class Manager
 		nArray.push (new Node (middleWidth + 50, middleHeight + 50));
 		nArray.push (new Node (middleWidth + 50, middleHeight - 50));
 
-		Face.addFace (new Face (nArray));
+		Face.addFace (new Face (nArray, false));
 
 		Manager.update ();
 	}
