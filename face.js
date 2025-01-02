@@ -1,5 +1,4 @@
-// THIS FILE IS HIGHLY EXPERIMENTAL
-import { Line } from "./line.js"
+import { Node } from "./node.js"
 
 export class Face
 {
@@ -16,6 +15,15 @@ export class Face
 	{
 		if (f == null)
 		{
+			console.error ("Could not add face to list. Given object is null");
+
+			return;
+		}
+
+		if (Face.exists (f.id) == true)
+		{
+			console.error ("Could not add face to list. ID already exists");
+
 			return;
 		}
 
@@ -87,11 +95,24 @@ export class Face
 		return null;
 	}
 
+	static getNumFaces ()
+	{
+		return Face.faces.length;
+	}
+
 	static update ()
 	{
-		for (var i = 0; i > Face.faces.length; i++)
+		console.log ("Faces updated");
+
+		for (var i = 0; i < Face.faces.length; i++)
 		{
 			Face.faces[i].update ();
+
+			if (Face.faces[i].isDeprecated () == true)
+			{
+				Face.removeFace (Face.faces[i]);
+				i--;
+			}
 		}
 	}
 
@@ -109,41 +130,21 @@ export class Face
 	// BEGINNING OF THE INSTANCEABLE CLASS //
 	/////////////////////////////////////////
 
-	constructor (lArray, add = true)
+	constructor (nArray, add = true)
 	{
-		this.lines = lArray;
-		this.nodes = [];
-
-		const l = this.lines.length;
-
-		if (l > 0)
-		{
-			for (var i = 0; i < l; i++)
-			{
-				this.lines[i].setFaceId (this.id);
-
-				if (this.nodes.indexOf (this.lines[i].start) == -1)
-				{
-					this.nodes.push (this.lines[i].start);
-				}
-
-				if (this.nodes.indexOf (this.lines[i].end) == -1)
-				{
-					this.nodes.push (this.lines[i].end);
-				}
-			}
-		}
+		this.nodes = nArray;
 
 		this.selected = false;
 		this.color = "lightgray";
+		this.deprecated = false;
 
-		const k = this.nodes.length;
+		const l = this.nodes.length;
 
 		var tId = "";
 
-		for (var j = 0; j < k; j++)
+		for (var i = 0; i < l; i++)
 		{
-			tId += this.nodes[j].getId().toString ();
+			tId += this.nodes[i].getId().toString ();
 		}
 
 		this.id = parseInt (tId);
@@ -152,12 +153,6 @@ export class Face
 		{
 			Face.addFace (this);
 		}
-	}
-
-	addLine (l)
-	{
-		l.setFaceId (this.id);
-		this.lines.push (l);
 	}
 
 	setRelPos (x, y)
@@ -191,9 +186,40 @@ export class Face
 		return r;
 	}
 
+	updateId ()
+	{
+		const l = this.nodes.length;
+
+		if (l > 0)
+		{
+			console.log ("Old face ID: " + this.id);
+
+			var tId = "";
+
+			for (var i = 0; i < l; i++)
+			{
+				tId += this.nodes[i].getId().toString ();
+			}
+
+			this.id = parseInt (tId);
+
+			console.log ("New face ID: " + this.id);
+		}
+	}
+
 	getId ()
 	{
 		return this.id;
+	}
+
+	isDeprecated ()
+	{
+		return this.deprecated;
+	}
+
+	getNumNodes ()
+	{
+		return this.nodes.length;
 	}
 
 	select ()
@@ -217,11 +243,42 @@ export class Face
 
 	update ()
 	{
-		for (var i = 0; i < this.lines.length; i++)
+		console.log ("Face " + this.id + " updated");
+		for (var i = 0; i < this.nodes.length; i++)
 		{
-			if (this.lines[i] == null)
+			if (this.nodes[i].isDeprecated () == true)
 			{
-				Face.removeFace (this);
+				console.log ("Deprecated node in surface " + this.id + " at index " + i + " found");
+				const newId = this.nodes[i].getNewId ();
+
+				if (newId == -1)
+				{
+					console.error ("New id is invalid. Remove surface from list");
+
+					this.deprecated = true;
+
+					return;
+				}
+
+				const newNode = Node.getNodeById (newId);
+
+				if (newNode == null)
+				{
+					console.error ("Could not find new node. Remove surface from list");
+
+					this.deprecated = true;
+				}
+
+				this.nodes[i] = null;
+				this.nodes[i] = newNode;
+				this.updateId ();
+			}
+
+			if (this.nodes[i] == null)
+			{
+				console.error ("Node at index " + i + " is null. Remove surface from list");
+
+				this.deprecated = true;
 
 				return;
 			}
@@ -230,32 +287,29 @@ export class Face
 
 	draw ()
 	{
-		const l = this.lines.length;
+		const l = this.nodes.length;
 
 		if (l > 0)
 		{
-			if (Line.lines[0] == null)
-			{
-				return;
-			}
+			Face.context.beginPath ();
 
-			Line.context.beginPath ();
-
-			if (this.lines[0].isDeprecated () == true)
-			{
-				return;
-			}
-
-			Line.context.moveTo (this.lines[0].start.getDrawnX (), this.lines[0].start.getDrawnY ());
+			Face.context.moveTo (this.nodes[l-1].getDrawnX (), this.nodes[l-1].getDrawnY ());
 
 			for (var i = 0; i < l; i++)
 			{
-				Line.context.lineTo (this.lines[i].end.getDrawnX (), this.lines[i].end.getDrawnY ());
+				Face.context.lineTo (this.nodes[i].getDrawnX (), this.nodes[i].getDrawnY ());
 			}
 
 			Face.context.fillStyle = this.color;
 			Face.context.fill ();
-			Line.context.stroke ();
+			Face.context.stroke ();
+
+			Face.context.closePath ();
+		}
+
+		else
+		{
+			console.error ("Face has no nodes");
 		}
 	}
 }
