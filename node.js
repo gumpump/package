@@ -5,6 +5,7 @@ export class Node
 	//////////////////////
 	// STATIC VARIABLES //
 	//////////////////////
+
 	// Makes sure everyone has an unique id
 	static idCounter = 1;
 
