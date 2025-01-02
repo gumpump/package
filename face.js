@@ -3,8 +3,6 @@ import { Line } from "./line.js"
 
 export class Face
 {
-	static idCounter = 1;
-
 	static context = null;
 
 	static faces = [];
@@ -51,6 +49,21 @@ export class Face
 		}
 
 		return null;
+	}
+
+	static exists (id)
+	{
+		const l = Face.faces.length;
+
+		for (var i = 0; i < l; i++)
+		{
+			if (Face.faces[i].id == id)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	static unselect ()
@@ -101,8 +114,6 @@ export class Face
 		this.lines = lArray;
 		this.nodes = [];
 
-		this.id = Face.idCounter++;
-
 		const l = this.lines.length;
 
 		if (l > 0)
@@ -126,7 +137,18 @@ export class Face
 		this.selected = false;
 		this.color = "lightgray";
 
-		if (add == true)
+		const k = this.nodes.length;
+
+		var tId = "";
+
+		for (var j = 0; j < k; j++)
+		{
+			tId += this.nodes[j].getId().toString ();
+		}
+
+		this.id = parseInt (tId);
+
+		if (add == true && Face.exists (this.id) == false)
 		{
 			Face.addFace (this);
 		}
