@@ -11,7 +11,7 @@ export class Properties
 
 		if (hTarget == null)
 		{
-			console.log ("Could not find target");
+			console.error ("Could not find target");
 
 			return;
 		}
@@ -27,14 +27,14 @@ export class Properties
 	{
 		if (object == null)
 		{
-			console.log ("Invalid object");
+			console.error ("Invalid object");
 
 			return;
 		}
 
 		if ((object instanceof Node) == false)
 		{
-			console.log ("Object is not a Node");
+			console.error ("Object is not a Node");
 
 			return;
 		}
@@ -49,8 +49,8 @@ export class Properties
 		}
 
 		var propHTML = "";
-		propHTML += '<p>Type: <span id="sidebar-object_properties_type">' + "Node" + '</span></p>';
-		propHTML += '<p>ID: <span id="sidebar-object_properties_id">' + object.getId () + '</span></p>';
+		propHTML += '<div>Type: <span id="sidebar-object_properties_type">' + "Node" + '</span></div>';
+		propHTML += '<div>ID: <span id="sidebar-object_properties_id">' + object.getId () + '</span></div>';
 
 		hTarget.innerHTML = propHTML;
 
@@ -61,14 +61,14 @@ export class Properties
 	{
 		if (object == null)
 		{
-			console.log ("Invalid object");
+			console.error ("Invalid object");
 
 			return;
 		}
 
 		if ((object instanceof Face) == false)
 		{
-			console.log ("Object is not a Face");
+			console.error ("Object is not a Face");
 
 			return;
 		}
@@ -77,14 +77,15 @@ export class Properties
 
 		if (hTarget == null)
 		{
-			console.log ("Could not find target");
+			console.error ("Could not find target");
 
 			return;
 		}
 
 		var propHTML = "";
-		propHTML += '<p>Type: <span id="sidebar-object_properties_type">' + "Face" + '</span></p>';
-		propHTML += '<p>ID: <span id="sidebar-object_properties_id">' + object.getId () + '</span></p>';
+		propHTML += '<div>Type: <span id="sidebar-object_properties_type">' + "Face" + '</span></div>';
+		propHTML += '<div>ID: <span id="sidebar-object_properties_id">' + object.getId () + '</span></div>';
+		propHTML += '<div>Nodes: <span id="sidebar-object_properties_num_nodes">' + object.getNumNodes () + '</span></div>';
 
 		hTarget.innerHTML = propHTML;
 
