@@ -78,6 +78,7 @@ export class Grid
 			Grid.gridContext.moveTo (x, 0);
 			Grid.gridContext.lineTo (x, Grid.grid.height);
 			Grid.gridContext.stroke ();
+			Grid.gridContext.closePath ();
 		}
 
 		for (var y = Grid.spanY; y < Grid.grid.height; y += Grid.spanY)
@@ -87,6 +88,7 @@ export class Grid
 			Grid.gridContext.moveTo (0, y);
 			Grid.gridContext.lineTo (Grid.grid.width, y);
 			Grid.gridContext.stroke ();
+			Grid.gridContext.closePath ();
 		}
 	}
 

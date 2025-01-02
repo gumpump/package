@@ -228,8 +228,6 @@ export class Node
 			return null;
 		}
 
-		console.log ("Nearest node found: " + p.id);
-
 		return p;
 	}
 
@@ -424,7 +422,6 @@ export class Node
 		{
 			console.log ("Found existing node");
 			p.setNewId (this.id);
-			Node.setChange (true);
 
 			return true;
 		}
@@ -598,6 +595,7 @@ export class Node
 		Node.context.fillStyle = this.color;
 		Node.context.fill ();
 		Node.context.stroke ();
+		Node.context.closePath ();
 
 		// These lines draws the coordinates of the node on the canvas
 		//Node.context.fillStyle = "black";
