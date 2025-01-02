@@ -131,7 +131,7 @@ export class Node
 
 		if (l == 0)
 		{
-			return 0;
+			return;
 		}
 
 		for (var i = 0; i < l; i++)
@@ -238,7 +238,7 @@ export class Node
 
 		if (p === undefined)
 		{
-			console.log ("Could not find node with id: " + id);
+			console.warn ("Could not find node with id: " + id);
 
 			return null;
 		}
@@ -366,6 +366,8 @@ export class Node
 
 			Node.currentNodes.push (this);
 			this.selected = true;
+
+			console.log ("Node " + this.id + " selected");
 		}
 	}
 
@@ -373,7 +375,7 @@ export class Node
 	unselect ()
 	{
 		this.selected = false;
-		console.log ("Node unselected");
+		console.log ("Node " + this.id + " unselected");
 	}
 
 	// Set new position
