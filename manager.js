@@ -1,6 +1,5 @@
 import { Grid } from "./grid.js"
 import { Node } from "./node.js"
-import { Line } from "./line.js"
 import { Face } from "./face.js"
 import { Properties } from "./properties.js"
 
@@ -30,16 +29,19 @@ export class Manager
 
 			for (var i = 0; i < l; i++)
 			{
+				var nArray = [];
+				nArray.push (p[i]);
+
 				const pX = p[i].getX ();
 				const pY = p[i].getY ();
 				const offX = (pX + 50 > Manager.canvasWidth) ? -50 : 50;
 				const offY = (pY + 50 > Manager.canvasHeight) ? -50 : 50;
-				const newP = new Node (pX + offX, pY + offY);
 
+				nArray.push (new Node (pX + offX, pY + offY));
 				Node.unselect ();
-				newP.select ();
+				nArray[0].select ();
 
-				Line.addLine (new Line (p[i], newP));
+				Face.addFace (new Face (nArray));
 			}
 		}
 
@@ -51,20 +53,14 @@ export class Manager
 		const middleWidth = Manager.canvasWidth / 2;
 		const middleHeight = Manager.canvasHeight / 2;
 
-		const pUpperLeft = new Node (middleWidth - 50, middleHeight - 50);
-		const pUpperRight = new Node (middleWidth - 50, middleHeight + 50);
-		const pLowerRight = new Node (middleWidth + 50, middleHeight + 50);
-		const pLowerLeft = new Node (middleWidth + 50, middleHeight - 50);
+		var nArray = [];
 
-		Line.addLine (new Line (pUpperLeft, pUpperRight, false));
-		Line.addLine (new Line (pUpperRight, pLowerRight, false));
-		Line.addLine (new Line (pLowerRight, pLowerLeft, false));
-		const lArray = Line.addLine (new Line (pLowerLeft, pUpperLeft, false));
+		nArray.push (new Node (middleWidth - 50, middleHeight - 50));
+		nArray.push (new Node (middleWidth - 50, middleHeight + 50));
+		nArray.push (new Node (middleWidth + 50, middleHeight + 50));
+		nArray.push (new Node (middleWidth + 50, middleHeight - 50));
 
-		if (lArray != null)
-		{
-			Face.addFace (new Face (lArray, false));
-		}
+		Face.addFace (new Face (nArray));
 
 		Manager.update ();
 	}
@@ -124,7 +120,6 @@ export class Manager
 	static update ()
 	{
 		Face.update ();
-		Line.update ();
 		Node.update ();
 
 		// Position of Grid.update unclear

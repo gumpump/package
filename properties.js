@@ -1,5 +1,4 @@
 import { Node } from "./node.js"
-//import { Line } from "./line.js"
 import { Face } from "./face.js"
 
 export class Properties
