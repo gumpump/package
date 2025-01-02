@@ -2,6 +2,10 @@ import { Node } from "./node.js"
 
 export class Line
 {
+	//////////////////////
+	// STATIC VARIABLES //
+	//////////////////////
+
 	// Makes sure everyone has an unique id
 	static idCounter = 1;
 
@@ -12,11 +16,19 @@ export class Line
 
 	static nodeIds = [];
 
+	////////////////////////////////////
+	// STATIC METHODS: INITIALIZATION //
+	////////////////////////////////////
+
 	// Set context for all lines to use
 	static setContext (ctx)
 	{
 		Line.context = ctx;
 	}
+
+	////////////////////////////////////////////////
+	// STATIC METHODS: MANIPULATION OF THE ARRAYS //
+	////////////////////////////////////////////////
 
 	// If a face is detected, this function returns a list of lines representing said face
 	static addLine (l)
@@ -43,7 +55,7 @@ export class Line
 		{
 			console.log ("Potential face detected");
 
-			return Line.buildingFace (l.end);
+			return Line.buildingFaces (l.end);
 		}
 	}
 
@@ -71,22 +83,46 @@ export class Line
 		}
 	}
 
-	static buildingFace (p)
+	static update ()
+	{
+		Line.removeDeprecated ();
+		for (var i = 0; i < Line.lines.length; i++)
+		{
+			Line.lines[i].update ();
+		}
+	}
+
+	///////////////////////////////
+	// STATIC METHODS: GET LINES //
+	///////////////////////////////
+
+	static buildingFaces (p)
 	{
 		var lArray = [];
-		var nextL = Line.getLineByStartNode (p);
+		var nextL = Line.getLinesByStartNode (p);
 
 		if (nextL === null)
 		{
 			return null;
 		}
 
-		lArray.push (nextL);
+		lArray.push (nextL[0]);
 
-		while (nextL.end != p)
+		while (nextL[0].end != p)
 		{
-			var nextL = Line.getLineByStartNode (nextL.end);
-			lArray.push (nextL);
+			var nextL = Line.getLinesByStartNode (nextL[0].end);
+
+			if (nextL === null)
+			{
+				console.log ("Could not find line with node " + tId + " at the start");
+
+				return null;
+			}
+
+			if (nextL.length > 0)
+			{
+				lArray.push (nextL[0]);
+			}
 		}
 
 		if (lArray.length > 0)
@@ -102,10 +138,7 @@ export class Line
 		}
 	}
 
-	// If there is more than one line with this starting node,
-	// shit will hit the fan
-	// TODO: Create a solution for that, maybe return an array
-	static getLineByStartNode (p)
+	static getLinesByStartNode (p)
 	{
 		const l = Line.lines.length;
 
@@ -113,22 +146,26 @@ export class Line
 		{
 			return;
 		}
+
+		var lArray = [];
 
 		for (var i = 0; i < l; i++)
 		{
 			if (Line.lines[i].start == p)
 			{
-				return Line.lines[i];
+				lArray.push (Line.lines[i]);
 			}
+		}
+
+		if (lArray.length > 0)
+		{
+			return lArray;
 		}
 
 		return null;
 	}
 
-	// If there is more than one line with this ending node,
-	// shit will hit the fan
-	// TODO: Create a solution for that, maybe return an array
-	static getLineByEndNode (p)
+	static getLinesByEndNode (p)
 	{
 		const l = Line.lines.length;
 
@@ -137,25 +174,27 @@ export class Line
 			return;
 		}
 
+		var lArray = [];
+
 		for (var i = 0; i < l; i++)
 		{
 			if (Line.lines[i].end == p)
 			{
-				return Line.lines[i];
+				lArray.push (Line.lines[i]);
 			}
+		}
+
+		if (lArray.length > 0)
+		{
+			return lArray;
 		}
 
 		return null;
 	}
 
-	static update ()
-	{
-		Line.removeDeprecated ();
-		for (var i = 0; i < Line.lines.length; i++)
-		{
-			Line.lines[i].update ();
-		}
-	}
+	/////////////////////////////
+	// STATIC METHODS: DRAWING //
+	/////////////////////////////
 
 	static draw ()
 	{
