@@ -1,6 +1,5 @@
 import { Grid } from "./grid.js"
 import { Node } from "./node.js"
-import { Line } from "./line.js"
 import { Face } from "./face.js"
 import { Manager } from "./manager.js"
 
@@ -29,6 +28,7 @@ export class GUI
 
 	// Debug infos
 	static debugNodes = null;
+	static debugFaces = null;
 
 	static create ()
 	{
@@ -77,11 +77,13 @@ export class GUI
 
 		Grid.setContext (GUI.ctx, GUI.canvas.width, GUI.canvas.height);
 		Node.setContext (GUI.ctx, GUI.canvas.width, GUI.canvas.height);
-		Line.setContext (GUI.ctx);
 		Face.setContext (GUI.ctx);
 
 		GUI.debugNodes = document.getElementById ("navbar-message_nodes");
 		GUI.debugNodes.innerText = Node.getNumNodes().toString ();
+
+		GUI.debugFaces = document.getElementById ("navbar-message_faces");
+		GUI.debugFaces.innerText = Face.getNumFaces().toString ();
 
 		GUI.status = document.getElementById ("Multi");
 		GUI.status.innerText = "Single select";
@@ -97,11 +99,11 @@ export class GUI
 		GUI.ctx.clearRect (0, 0, GUI.canvas.width, GUI.canvas.height);
 		Grid.draw ();
 		Face.draw ();
-		Line.draw ();
 		Node.draw ();
 		requestAnimationFrame (GUI.draw);
 		// Debug infos
 		GUI.debugNodes.innerText = Node.getNumNodes().toString ();
+		GUI.debugFaces.innerText = Face.getNumFaces().toString ();
 	}
 
 	// Event handler
@@ -136,7 +138,8 @@ export class GUI
 	static buttonClear ()
 	{
 		Node.clear ();
-		Manager.update ();
+		Node.update ();
+		Face.update ();
 	}
 
 	static gridSpanXChange (event)

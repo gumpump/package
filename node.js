@@ -131,7 +131,7 @@ export class Node
 
 		if (l == 0)
 		{
-			return 0;
+			return;
 		}
 
 		for (var i = 0; i < l; i++)
@@ -228,8 +228,6 @@ export class Node
 			return null;
 		}
 
-		console.log ("Nearest node found: " + p.id);
-
 		return p;
 	}
 
@@ -240,7 +238,7 @@ export class Node
 
 		if (p === undefined)
 		{
-			console.log ("Could not find node with id: " + id);
+			console.warn ("Could not find node with id: " + id);
 
 			return null;
 		}
@@ -368,6 +366,8 @@ export class Node
 
 			Node.currentNodes.push (this);
 			this.selected = true;
+
+			console.log ("Node " + this.id + " selected");
 		}
 	}
 
@@ -375,7 +375,7 @@ export class Node
 	unselect ()
 	{
 		this.selected = false;
-		console.log ("Node unselected");
+		console.log ("Node " + this.id + " unselected");
 	}
 
 	// Set new position
@@ -424,7 +424,6 @@ export class Node
 		{
 			console.log ("Found existing node");
 			p.setNewId (this.id);
-			Node.setChange (true);
 
 			return true;
 		}
@@ -598,6 +597,7 @@ export class Node
 		Node.context.fillStyle = this.color;
 		Node.context.fill ();
 		Node.context.stroke ();
+		Node.context.closePath ();
 
 		// These lines draws the coordinates of the node on the canvas
 		//Node.context.fillStyle = "black";
