@@ -412,7 +412,6 @@ export class Node
 
 		if (p == null)
 		{
-			debugger;
 			return false;
 		}
 
