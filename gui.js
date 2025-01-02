@@ -82,6 +82,9 @@ export class GUI
 		GUI.debugNodes = document.getElementById ("navbar-message_nodes");
 		GUI.debugNodes.innerText = Node.getNumNodes().toString ();
 
+		GUI.debugFaces = document.getElementById ("navbar-message_faces");
+		GUI.debugFaces.innerText = Face.getNumFaces().toString ();
+
 		GUI.status = document.getElementById ("Multi");
 		GUI.status.innerText = "Single select";
 	}
@@ -100,6 +103,7 @@ export class GUI
 		requestAnimationFrame (GUI.draw);
 		// Debug infos
 		GUI.debugNodes.innerText = Node.getNumNodes().toString ();
+		GUI.debugFaces.innerText = Face.getNumFaces().toString ();
 	}
 
 	// Event handler
@@ -134,7 +138,8 @@ export class GUI
 	static buttonClear ()
 	{
 		Node.clear ();
-		Manager.update ();
+		Node.update ();
+		Face.update ();
 	}
 
 	static gridSpanXChange (event)
