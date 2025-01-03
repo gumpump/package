@@ -1,0 +1,22 @@
+div#context-menu
+{
+    background-color: #ffffff;
+    box-shadow: 0 0 5px;
+    border-radius: 5px;
+    color: #000000;
+    width: 100px;
+    font-size: 1rem;
+    position: fixed;
+    visibility: hidden;
+}
+
+div.context-menu_item
+{
+    padding: 2px 0px 2px 2px;
+}
+
+div.context-menu_item:hover
+{
+    background-color: lightblue;
+    cursor: pointer;
+}
