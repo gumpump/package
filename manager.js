@@ -71,15 +71,15 @@ export class Manager
 
 	static mouseClick (event)
 	{
-		const p = Node.getNodeByPos (event.offsetX, event.offsetY, 15);
+		const n = Node.getNodeByPos (event.offsetX, event.offsetY, 15);
 
-		if (p != null)
+		if (n != null)
 		{
-			p.select (Manager.multipleSelect);
+			n.select (Manager.multipleSelect);
 
 			if (Node.getNumSelected () == 1)
 			{
-				Properties.buildNodeView (p);
+				Properties.buildNodeView (n);
 			}
 
 			else
