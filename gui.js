@@ -2,6 +2,7 @@ import { Grid } from "./grid.js"
 import { Node } from "./node.js"
 import { Face } from "./face.js"
 import { Manager } from "./manager.js"
+import { ContextMenu } from "./contextmenu.js"
 
 export class GUI
 {
@@ -63,10 +64,11 @@ export class GUI
 		// Canvas
 		GUI.canvas = document.getElementsByTagName ("canvas")[0];
 		GUI.canvas.addEventListener ("click", Manager.mouseClick);
-		GUI.canvas.addEventListener ("mousedown", GUI.nodeDown);
-		GUI.canvas.addEventListener ("mouseup", GUI.nodeUp);
-		GUI.canvas.addEventListener ("mouseleave", GUI.nodeUp);
-		GUI.canvas.addEventListener ("mousemove", GUI.nodeMove);
+		GUI.canvas.addEventListener ("mousedown", GUI.mouseDown);
+		GUI.canvas.addEventListener ("mouseup", GUI.mouseUp);
+		GUI.canvas.addEventListener ("mouseleave", GUI.mouseUp);
+		GUI.canvas.addEventListener ("mousemove", GUI.mouseMove);
+		GUI.canvas.addEventListener ("contextmenu", ContextMenu.open);
 
 		GUI.canvasRect = GUI.canvas.getBoundingClientRect ();
 		GUI.canvas.width = GUI.canvasRect.width;
@@ -154,7 +156,7 @@ export class GUI
 		Grid.update ();
 	}
 
-	static nodeDown (event)
+	static mouseDown (event)
 	{
 		const p = Node.getSelected ();
 		const l = p.length;
@@ -193,7 +195,7 @@ export class GUI
 		GUI.drag = "o";
 	}
 
-	static nodeUp (event)
+	static mouseUp (event)
 	{
 		const p = Node.getSelected ();
 		const l = p.length;
@@ -208,7 +210,7 @@ export class GUI
 		Manager.update ();
 	}
 
-	static nodeMove (event)
+	static mouseMove (event)
 	{
 		switch (GUI.drag)
 		{
