@@ -377,6 +377,13 @@ export class Node
 
 			console.log ("Node " + this.id + " selected");
 		}
+
+		else
+		{
+			const i = Node.currentNodes.indexOf (this);
+			Node.currentNodes.splice (i, 1);
+			this.unselect ();
+		}
 	}
 
 	// Unselect this node
@@ -608,8 +615,10 @@ export class Node
 		Node.context.closePath ();
 
 		// These lines draws the coordinates of the node on the canvas
-		//Node.context.fillStyle = "black";
-		//Node.context.font = "24px sanserif";
-		//Node.context.fillText (this.realX + ", " + this.realY, this.drawX + 20, this.drawY + 5);
+		
+		Node.context.fillStyle = "black";
+		Node.context.font = "24px sanserif";
+		Node.context.fillText (this.realX + ", " + this.realY, this.drawX + 20, this.drawY + 5);
+
 	}
 }
