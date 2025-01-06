@@ -20,6 +20,11 @@ export class Manager
 	///////////////////////////////////
 	// BUTTON-RELATED EVENT HANDLERS //
 	///////////////////////////////////
+
+	static createNode (event)
+	{
+		
+	}
 	
 	static createLine (event)
 	{

@@ -8,6 +8,7 @@ export class GUI
 {
 	// Buttons
 	static hButtonShow = null;
+	static hButtonNode = null;
 	static hButtonLine = null;
 	static hButtonRect = null;
 
@@ -41,6 +42,9 @@ export class GUI
 		GUI.hButtonShow.addEventListener ("mousedown", GUI.showAll);
 		GUI.hButtonShow.addEventListener ("mouseup", GUI.hideAll);
 		GUI.hButtonShow.addEventListener ("mouseleave", GUI.hideAll);
+
+		GUI.hButtonNode = document.getElementById ("sidebar-buttons_add_node");
+		GUI.hButtonNode.addEventListener ("click", Manager.createNode);
 
 		GUI.hButtonLine = document.getElementById ("sidebar-buttons_add_line");
 		GUI.hButtonLine.addEventListener ("click", Manager.createLine);
