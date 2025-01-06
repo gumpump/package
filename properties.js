@@ -5,8 +5,6 @@ export class Properties
 {
 	static clear ()
 	{
-		console.log ("Property view cleared");
-
 		const hTarget = document.getElementById ("sidebar-object_properties");
 
 		if (hTarget == null)
@@ -53,8 +51,6 @@ export class Properties
 		propHTML += '<div>ID: <span id="sidebar-object_properties_id">' + object.getId () + '</span></div>';
 
 		hTarget.innerHTML = propHTML;
-
-		console.log ("Property view built");
 	}
 
 	static buildFaceView (object)
@@ -88,7 +84,5 @@ export class Properties
 		propHTML += '<div>Nodes: <span id="sidebar-object_properties_num_nodes">' + object.getNumNodes () + '</span></div>';
 
 		hTarget.innerHTML = propHTML;
-
-		console.log ("Property view built");
 	}
 }
