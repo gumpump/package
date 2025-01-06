@@ -95,34 +95,45 @@ export class Manager
 				Properties.clear ();
 			}
 
-			Face.unselect ();
+			if (Manager.multipleSelect == false)
+			{
+				Face.unselect ();
+			}
 
 			return;
 		}
-
-		Face.unselect ();
 
 		const f = Face.getFaceByPos (event.offsetX, event.offsetY);
 
 		if (f != null)
 		{
-			f.select ();
+			f.select (Manager.multipleSelect);
 
-			Properties.buildFaceView (f);
+			if (Face.getNumSelected () == 1)
+			{
+				Properties.buildFaceView (f);
+			}
 
-			Node.unselect ();
+			else
+			{
+				Properties.clear ();
+			}
+
+			if (Manager.multipleSelect == false)
+			{
+				Node.unselect ();
+			}
 
 			return;
 		}
 
-		Face.unselect ();
+		Properties.clear ();
 
 		if (Manager.multipleSelect == false)
 		{
 			Node.unselect ();
+			Face.unselect ();
 		}
-
-		Properties.clear ();
 	}
 
 	static update ()

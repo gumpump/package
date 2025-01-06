@@ -163,7 +163,7 @@ export class GUI
 	static mouseDown (event)
 	{
 		const p = Node.getSelected ();
-		const l = p.length;
+		var l = p.length;
 
 		if (l > 0)
 		{
@@ -183,14 +183,18 @@ export class GUI
 		else
 		{
 			const f = Face.getSelected ();
+			l = f.length;
 
-			if (f != null)
+			if (f > 0)
 			{
-				if (f.intersect (event.offsetX, event.offsetY) == true)
+				for (var i = 0; i < l; i++)
 				{
-					GUI.drag = "f";
+					if (f[i].intersect (event.offsetX, event.offsetY) == true)
+					{
+						GUI.drag = "f";
 
-					return;
+						return;
+					}
 				}
 			}
 		}
@@ -225,14 +229,14 @@ export class GUI
 
 			case "n":
 			{
-				const p = Node.getSelected ();
-				const l = p.length;
+				const n = Node.getSelected ();
+				var l = n.length;
 
 				if (l > 0)
 				{
 					for (var i = 0; i < l; i++)
 					{
-						p[i].setRelPos (event.movementX, event.movementY);
+						n[i].setRelPos (event.movementX, event.movementY);
 					}
 
 					return;
@@ -242,13 +246,18 @@ export class GUI
 			case "f":
 			{
 				const f = Face.getSelected ();
+				l = f.length;
 
-				if (f != null)
+				if (l > 0)
 				{
-					f.setRelPos (event.movementX, event.movementY);
-				}
+					for (var i = 0; i < l; i++)
+					{
+						f[i].setRelPos (event.movementX, event.movementY);
+						debugger;
+					}
 
-				return;
+					return;
+				}
 			} break;
 		}
 	}

@@ -2,15 +2,27 @@ import { Node } from "./node.js"
 
 export class Face
 {
+	//////////////////////
+	// STATIC VARIABLES //
+	//////////////////////
+
 	static context = null;
 
 	static faces = [];
 	static currentFaces = [];
 
+	////////////////////////////////////
+	// STATIC METHODS: INITIALIZATION //
+	////////////////////////////////////
+
 	static setContext (ctx)
 	{
 		Face.context = ctx;
 	}
+
+	////////////////////////////////////////////////
+	// STATIC METHODS: MANIPULATION OF THE ARRAYS //
+	////////////////////////////////////////////////
 
 	static addFace (f)
 	{
@@ -37,7 +49,15 @@ export class Face
 	{
 		if (Face.faces.length > 0)
 		{
-			const i = Face.faces.indexOf (f);
+			var i = Face.currentFaces.indexOf (this);
+
+			if (i != -1)
+			{
+				Face.currentFaces[i].unselect ();
+				Face.currentFaces.splice (i, 1);
+			}
+
+			i = Face.faces.indexOf (f);
 
 			if (i != -1)
 			{
@@ -46,6 +66,39 @@ export class Face
 			}
 		}
 	}
+
+	static unselect ()
+	{
+		const l = Face.currentFaces.length;
+
+		if (l > 0)
+		{
+			for (var i = 0; i < l; i++)
+			{
+				Face.currentFaces[i].unselect ();
+			}
+		}
+
+		Face.currentFaces = [];
+	}
+
+	static update ()
+	{
+		for (var i = 0; i < Face.faces.length; i++)
+		{
+			Face.faces[i].update ();
+
+			if (Face.faces[i].isDeprecated () == true)
+			{
+				Face.removeFace (Face.faces[i]);
+				i--;
+			}
+		}
+	}
+
+	///////////////////////////////
+	// STATIC METHODS: GET NODES //
+	///////////////////////////////
 
 	static getFaceByPos (x, y)
 	{
@@ -59,6 +112,15 @@ export class Face
 
 		return null;
 	}
+
+	static getSelected ()
+	{
+		return Face.currentFaces;
+	}
+
+	///////////////////////////////////////////
+	// STATIC METHODS: GET INFOS ABOUT NODES //
+	///////////////////////////////////////////
 
 	static exists (id)
 	{
@@ -75,47 +137,25 @@ export class Face
 		return false;
 	}
 
-	static unselect ()
-	{
-		for (var i = 0; i < Face.faces.length; i++)
-		{
-			Face.faces[i].unselect ();
-		}
-	}
-
-	static getSelected ()
-	{
-		for (var i = 0; i < Face.faces.length; i++)
-		{
-			if (Face.faces[i].isSelected () == true)
-			{
-				return Face.faces[i];
-			}
-		}
-
-		return null;
-	}
-
 	static getNumFaces ()
 	{
 		return Face.faces.length;
 	}
 
-	static update ()
+	// Is any face selected?
+	static isSelected ()
 	{
-		console.log ("Faces updated");
-
-		for (var i = 0; i < Face.faces.length; i++)
-		{
-			Face.faces[i].update ();
-
-			if (Face.faces[i].isDeprecated () == true)
-			{
-				Face.removeFace (Face.faces[i]);
-				i--;
-			}
-		}
+		return (Face.currentFaces.length > 0) ? true : false;
 	}
+
+	static getNumSelected ()
+	{
+		return Face.currentFaces.length;
+	}
+
+	/////////////////////////////
+	// STATIC METHODS: DRAWING //
+	/////////////////////////////
 
 	static draw ()
 	{
@@ -167,6 +207,8 @@ export class Face
 
 	intersect (x, y)
 	{
+		var r = false;
+
 		if (this.nodes.length == 2)
 		{
 			const d1 = Node.getDistance (x, y, this.nodes[0].getDrawnX (), this.nodes[0].getDrawnY ());
@@ -176,7 +218,8 @@ export class Face
 
 			if (d1 + d2 >= length - buf && d1 + d2 <= length + buf)
 			{
-				return true;
+				console.log ("Intersection with line");
+				r = true;
 			}
 		}
 
@@ -194,12 +237,13 @@ export class Face
 
 				if (intersect)
 				{
-					return true;
+					console.log ("Intersection with face");
+					r = !r;
 				}
 			}
 		}
 
-		return false;
+		return r;
 	}
 
 	updateId ()
@@ -238,16 +282,32 @@ export class Face
 		return this.nodes.length;
 	}
 
-	select ()
+	select (multi)
 	{
-		console.log ("Face " + this.id + " selected");
-
-		this.selected = true;
-		this.fillColor = "gray";
-
-		if (this.nodes.length == 2)
+		if (this.selected == false)
 		{
-			this.borderColor = "red";
+			if (multi == false)
+			{
+				Face.unselect ();
+			}
+
+			Face.currentFaces.push (this);
+			this.selected = true;
+			this.fillColor = "gray";
+
+			if (this.nodes.length == 2)
+			{
+				this.borderColor = "yellow";
+			}
+
+			console.log ("Face " + this.id + " selected");
+		}
+
+		else
+		{
+			const i = Face.currentFaces.indexOf (this);
+			Face.currentFaces.splice (i, 1);
+			this.unselect ();
 		}
 	}
 
@@ -265,7 +325,6 @@ export class Face
 
 	update ()
 	{
-		console.log ("Face " + this.id + " updated");
 		for (var i = 0; i < this.nodes.length; i++)
 		{
 			if (this.nodes[i].isDeprecated () == true)
