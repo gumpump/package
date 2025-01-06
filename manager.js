@@ -1,6 +1,7 @@
 import { Grid } from "./grid.js"
 import { Node } from "./node.js"
 import { Face } from "./face.js"
+import { ContextMenu } from "./contextmenu.js"
 import { Properties } from "./properties.js"
 
 export class Manager
@@ -71,6 +72,8 @@ export class Manager
 
 	static mouseClick (event)
 	{
+		ContextMenu.close ();
+
 		const n = Node.getNodeByPos (event.offsetX, event.offsetY, 15);
 
 		if (n != null)

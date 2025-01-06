@@ -19,4 +19,14 @@ export class ContextMenu
 
 		ContextMenu.menu.style.visibility = "visible";
 	}
+
+	static close ()
+	{
+		if (ContextMenu.menu == null)
+		{
+			ContextMenu.menu = document.getElementById ("context-menu");
+		}
+
+		ContextMenu.menu.style.visibility = "hidden";
+	}
 }
