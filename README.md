@@ -26,4 +26,4 @@ You can use Bun.js with build.tsx to bundle it and link it in an html file. The 
  - Toggling grid on and off
 
  ## Known bugs
- - If you move multiple nodes at once they snap to the grid differently so their surface become distorted.
+You can look up currently known bugs under "Issues"
