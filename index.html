@@ -5,16 +5,26 @@
 	<body>
 	<div>
 		<nav>
-			<div><span id="navbar-message_nodes"></span> nodes</div>
-			<div><span id="navbar-message_faces"></span> surfaces</div>
+			<div id="navbar-messages">
+				<div class="navbar-message_box">
+					<div><span id="navbar-message_nodes"></span> nodes</div>
+					<div><span id="navbar-message_faces"></span> surfaces</div>
+				</div>
+				<div class="navbar-message_box">
+					<div><span id="navbar-message_current_nodes"></span> nodes selected</div>
+					<div><span id="navbar-message_current_faces"></span> surfaces selected</div>
+				</div>
+			</div>
 			<button id="navbar-buttons_show">Show all</button>
 		</nav>
 		<div id="screen">
 			<div id="sidebar_left">
 				<div class="sidebar-buttons_add">
+					<button id="sidebar-buttons_add_node">Add node</button>
 					<button id="sidebar-buttons_add_line">Add line</button>
 					<button id="sidebar-buttons_add_rect">Add rectangle</button>
 				</div>
+				<hr>
 				<button id="sidebar-buttons_clear">Clear</button>
 			</div>
 			<canvas></canvas>
