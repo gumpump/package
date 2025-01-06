@@ -290,6 +290,14 @@ export class Node
 		return Node.currentNodes.length;
 	}
 
+	static getDistance (n1X, n1Y, n2X, n2Y)
+	{
+		const v1 = n2X - n1X;
+		const v2 = n2Y - n1Y;
+
+		return Math.sqrt (v1 * v1 + v2 * v2);
+	}
+
 	/////////////////////////////
 	// STATIC METHODS: DRAWING //
 	/////////////////////////////
