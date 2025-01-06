@@ -5,6 +5,7 @@ export class Face
 	static context = null;
 
 	static faces = [];
+	static currentFaces = [];
 
 	static setContext (ctx)
 	{
