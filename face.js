@@ -135,7 +135,8 @@ export class Face
 		this.nodes = nArray;
 
 		this.selected = false;
-		this.color = "lightgray";
+		this.fillColor = "lightgray";
+		this.borderColor = "black";
 		this.deprecated = false;
 
 		const l = this.nodes.length;
@@ -165,25 +166,39 @@ export class Face
 
 	intersect (x, y)
 	{
-		var r = false;
-
-		for (var i = 0, j = this.nodes.length - 1; i < this.nodes.length; j = i++)
+		if (this.nodes.length == 2)
 		{
-			var xI = this.nodes[i].getX ();
-			var yI = this.nodes[i].getY ();
+			const d1 = Node.getDistance (x, y, this.nodes[0].getDrawnX (), this.nodes[0].getDrawnY ());
+			const d2 = Node.getDistance (x, y, this.nodes[1].getDrawnX (), this.nodes[1].getDrawnY ());
+			const length = Node.getDistance (this.nodes[0].getDrawnX (), this.nodes[0].getDrawnY (), this.nodes[1].getDrawnX (), this.nodes[1].getDrawnY ());
+			const buf = 1;
 
-			var xJ = this.nodes[j].getX ();
-			var yJ = this.nodes[j].getY ();
-
-			var intersect = ((yI > y) != (yJ > y)) && (x < (xJ - xI) * (y - yI) / (yJ - yI) + xI);
-
-			if (intersect)
+			if (d1 + d2 >= length - buf && d1 + d2 <= length + buf)
 			{
-				r = !r;
+				return true;
 			}
 		}
 
-		return r;
+		else
+		{
+			for (var i = 0, j = this.nodes.length - 1; i < this.nodes.length; j = i++)
+			{
+				var xI = this.nodes[i].getX ();
+				var yI = this.nodes[i].getY ();
+
+				var xJ = this.nodes[j].getX ();
+				var yJ = this.nodes[j].getY ();
+
+				var intersect = ((yI > y) != (yJ > y)) && (x < (xJ - xI) * (y - yI) / (yJ - yI) + xI);
+
+				if (intersect)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	updateId ()
@@ -227,13 +242,19 @@ export class Face
 		console.log ("Face " + this.id + " selected");
 
 		this.selected = true;
-		this.color = "gray";
+		this.fillColor = "gray";
+
+		if (this.nodes.length == 2)
+		{
+			this.borderColor = "red";
+		}
 	}
 
 	unselect ()
 	{
 		this.selected = false;
-		this.color = "lightgray";
+		this.fillColor = "lightgray";
+		this.borderColor = "black";
 	}
 
 	isSelected ()
@@ -300,8 +321,9 @@ export class Face
 				Face.context.lineTo (this.nodes[i].getDrawnX (), this.nodes[i].getDrawnY ());
 			}
 
-			Face.context.fillStyle = this.color;
+			Face.context.fillStyle = this.fillColor;
 			Face.context.fill ();
+			Face.context.strokeStyle = this.borderColor;
 			Face.context.stroke ();
 
 			Face.context.closePath ();
