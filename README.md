@@ -17,7 +17,6 @@ You can use Bun.js with build.tsx to bundle it and link it in an html file. The 
 
 ## Planned features
 
- - Creating single nodes independently from lines
  - Add nodes into existing faces
  - Creating round lines
  - Interactive input fields for changing coordinates of nodes
