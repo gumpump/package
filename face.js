@@ -237,9 +237,13 @@ export class Face
 
 				if (intersect)
 				{
-					console.log ("Intersection with face");
 					r = !r;
 				}
+			}
+
+			if (r == true)
+			{
+				console.log ("Intersection with face");
 			}
 		}
 
