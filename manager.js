@@ -35,7 +35,7 @@ export class Manager
 				// TODO: Rework this
 				if (f[i].isLine () == true)
 				{
-					f[i].addNode (1, new Node (100, 100));
+					f[i].addNode (1);
 				}
 			}
 		}
@@ -44,8 +44,9 @@ export class Manager
 		{
 			const middleWidth = Manager.canvasWidth / 2;
 			const middleHeight = Manager.canvasHeight / 2;
-
-			Node.addNode (new Node (middleWidth, middleHeight, false, false));
+			const node = new Node (middleWidth, middleHeight, false, false);
+			node.select (false);
+			Node.addNode (node);
 		}
 	}
 	

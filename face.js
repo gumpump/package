@@ -293,13 +293,14 @@ export class Face
 
 	// THE UNIVERSE HAS ABANDONED US FOR THIS
 	// TODO: Rework this
-	addNode (index, node)
+	addNode (index)
 	{
 		const v1X = this.nodes[index-1].getX () - this.nodes[index].getX ();
 		const v1Y = this.nodes[index-1].getY () - this.nodes[index].getY ();
 		const vX = this.nodes[index].getX () + (v1X / 2);
 		const vY = this.nodes[index].getY () + (v1Y / 2);
-		node.setPos (vX, vY);
+		const node = new Node (vX, vY);
+		node.select (false);
 		this.nodes.splice (index, 0, node);
 	}
 
