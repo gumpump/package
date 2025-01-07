@@ -23,27 +23,51 @@ export class Manager
 
 	static createNode (event)
 	{
-		
+		const f = Face.getSelected ();
+		var l = f.length;
+
+		if (l > 0)
+		{
+			for (var i = 0; i < l; i++)
+			{
+				// ONLY FOR TEST PURPOSES
+				// MAY THE UNIVERSE FORGIVE US
+				// TODO: Rework this
+				if (f[i].isLine () == true)
+				{
+					f[i].addNode (1, new Node (100, 100));
+				}
+			}
+		}
+
+		else
+		{
+			const middleWidth = Manager.canvasWidth / 2;
+			const middleHeight = Manager.canvasHeight / 2;
+
+			Node.addNode (new Node (middleWidth, middleHeight, false, false));
+		}
 	}
 	
 	static createLine (event)
 	{
 		if (Node.isSelected () == true)
 		{
-			const p = Node.getSelected ();
-			const l = p.length;
+			const n = Node.getSelected ();
+			const l = n.length;
 
 			for (var i = 0; i < l; i++)
 			{
 				var nArray = [];
-				nArray.push (p[i]);
+				n[i].setConnected (true);
+				nArray.push (n[i]);
 
-				const pX = p[i].getX ();
-				const pY = p[i].getY ();
-				const offX = (pX + 50 > Manager.canvasWidth) ? -50 : 50;
-				const offY = (pY + 50 > Manager.canvasHeight) ? -50 : 50;
+				const nX = n[i].getX ();
+				const nY = n[i].getY ();
+				const offX = (nX + 50 > Manager.canvasWidth) ? -50 : 50;
+				const offY = (nY + 50 > Manager.canvasHeight) ? -50 : 50;
 
-				nArray.push (new Node (pX + offX, pY + offY));
+				nArray.push (new Node (nX + offX, nY + offY));
 				Node.unselect ();
 				nArray[1].select ();
 
