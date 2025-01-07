@@ -66,47 +66,47 @@ export class Node
 	////////////////////////////////////////////////
 
 	// Add a node to the arrays
-	static addNode (p)
+	static addNode (n)
 	{
-		Node.nodes.push (p);
+		Node.nodes.push (n);
 
 		if (Node.coordinateSystem.length == 0)
 		{
 			Node.createCoordinateSystem ();
 		}
 
-		var targetX = Node.getNodeIndex (p.getX (), Node.contextWidth);
-		var targetY = Node.getNodeIndex (p.getY (), Node.contextHeight);
+		var targetX = Node.getNodeIndex (n.getX (), Node.contextWidth);
+		var targetY = Node.getNodeIndex (n.getY (), Node.contextHeight);
 
-		Node.coordinateSystem[targetX][targetY].push (p);
+		Node.coordinateSystem[targetX][targetY].push (n);
 
-		console.log ("Node " + p.id + " added");
+		console.log ("Node " + n.id + " added");
 	}
 
 	// Remove a node out of the arrays
-	static removeNode (p)
+	static removeNode (n)
 	{
 		if (Node.nodes.length > 0)
 		{
-			const i = Node.nodes.indexOf (p);
+			const i = Node.nodes.indexOf (n);
 
 			if (i != -1)
 			{
 				Node.nodes.splice (i, 1);
-				console.log ("Node " + p.id + " removed in .nodes");
+				console.log ("Node " + n.id + " removed in .nodes");
 			}
 		}
 
 		if (Node.coordinateSystem.length > 0)
 		{
-			const targetX = p.getCoordX ();
-			const targetY = p.getCoordY ();
-			const j = Node.coordinateSystem[targetX][targetY].indexOf (p);
+			const targetX = n.getCoordX ();
+			const targetY = n.getCoordY ();
+			const j = Node.coordinateSystem[targetX][targetY].indexOf (n);
 
 			if (j != -1)
 			{
 				Node.coordinateSystem[targetX][targetY].splice (j, 1);
-				console.log ("Node " + p.id + " removed in .coordinateSystem");
+				console.log ("Node " + n.id + " removed in .coordinateSystem");
 			}
 		}
 	}
