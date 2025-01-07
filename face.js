@@ -286,6 +286,23 @@ export class Face
 		return this.nodes.length;
 	}
 
+	isLine ()
+	{
+		return (this.nodes.length == 2) ? true : false;
+	}
+
+	// THE UNIVERSE HAS ABANDONED US FOR THIS
+	// TODO: Rework this
+	addNode (index, node)
+	{
+		const v1X = this.nodes[index-1].getX () - this.nodes[index].getX ();
+		const v1Y = this.nodes[index-1].getY () - this.nodes[index].getY ();
+		const vX = this.nodes[index].getX () + (v1X / 2);
+		const vY = this.nodes[index].getY () + (v1Y / 2);
+		node.setPos (vX, vY);
+		this.nodes.splice (index, 0, node);
+	}
+
 	select (multi)
 	{
 		if (this.selected == false)
