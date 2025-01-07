@@ -323,7 +323,7 @@ export class Node
 	/////////////////////////////////////////
 
 	// Constructor of a single node
-	constructor (x, y, add = true)
+	constructor (x, y, add = true, connected = true)
 	{
 		// Currently accepted coordinates
 		this.x = x;
@@ -346,6 +346,8 @@ export class Node
 
 		// Is the node selected?
 		this.selected = false;
+
+		this.connected = connected;
 
 		// Color to use when the node is drawn
 		this.color = "yellow";
@@ -444,6 +446,16 @@ export class Node
 		}
 
 		return false;
+	}
+
+	setConnected (c)
+	{
+		this.connected = c;
+	}
+
+	isConnected ()
+	{
+		return this.connected;
 	}
 
 	// Get the currently accepted position on the x-axis
@@ -602,14 +614,24 @@ export class Node
 			this.drawY = this.y;
 		}
 
-		if (this.selected == false && Node.show == false)
+		if (this.selected == false && Node.show == false && this.connected == true)
 		{
 			return;
 		}
 
 		Node.context.beginPath ();
 		Node.context.arc (this.drawX, this.drawY, 8, 0, 2 * Math.PI);
-		Node.context.fillStyle = this.color;
+
+		if (this.selected == true)
+		{
+			Node.context.fillStyle = this.color;
+		}
+
+		else
+		{
+			Node.context.fillStyle = "blue";
+		}
+
 		Node.context.fill ();
 		Node.context.stroke ();
 		Node.context.closePath ();
