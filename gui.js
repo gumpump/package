@@ -32,6 +32,9 @@ export class GUI
 	static debugNodes = null;
 	static debugFaces = null;
 
+	static debugCurrentNodes = null;
+	static debugCurrentFaces = null;
+
 	static create ()
 	{
 		document.body.addEventListener ("keydown", GUI.keyDown);
@@ -91,6 +94,12 @@ export class GUI
 		GUI.debugFaces = document.getElementById ("navbar-message_faces");
 		GUI.debugFaces.innerText = Face.getNumFaces().toString ();
 
+		GUI.debugCurrentNodes = document.getElementById ("navbar-message_current_nodes");
+		GUI.debugCurrentNodes.innerText = Node.getNumSelected().toString ();
+
+		GUI.debugCurrentFaces = document.getElementById ("navbar-message_current_faces");
+		GUI.debugCurrentFaces.innerText = Face.getNumSelected().toString ();
+
 		GUI.status = document.getElementById ("Multi");
 		GUI.status.innerText = "Single select";
 	}
@@ -110,6 +119,8 @@ export class GUI
 		// Debug infos
 		GUI.debugNodes.innerText = Node.getNumNodes().toString ();
 		GUI.debugFaces.innerText = Face.getNumFaces().toString ();
+		GUI.debugCurrentNodes.innerText = Node.getNumSelected().toString ();
+		GUI.debugCurrentFaces.innerText = Face.getNumSelected().toString ();
 	}
 
 	// Event handler
@@ -185,7 +196,7 @@ export class GUI
 			const f = Face.getSelected ();
 			l = f.length;
 
-			if (f > 0)
+			if (l > 0)
 			{
 				for (var i = 0; i < l; i++)
 				{
@@ -253,7 +264,6 @@ export class GUI
 					for (var i = 0; i < l; i++)
 					{
 						f[i].setRelPos (event.movementX, event.movementY);
-						debugger;
 					}
 
 					return;
