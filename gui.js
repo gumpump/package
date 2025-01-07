@@ -173,14 +173,14 @@ export class GUI
 
 	static mouseDown (event)
 	{
-		const p = Node.getSelected ();
-		var l = p.length;
+		const n = Node.getSelected ();
+		var l = n.length;
 
 		if (l > 0)
 		{
 			for (var i = 0; i < l; i++)
 			{
-				if (p[i].getDistance (event.offsetX, event.offsetY) > 15)
+				if (n[i].getDistance (event.offsetX, event.offsetY) > 15)
 				{
 					continue;
 				}
@@ -216,8 +216,8 @@ export class GUI
 
 	static mouseUp (event)
 	{
-		const p = Node.getSelected ();
-		const l = p.length;
+		const n = Node.getSelected ();
+		const l = n.length;
 
 		if (l == 0)
 		{
