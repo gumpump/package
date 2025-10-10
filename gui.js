@@ -37,6 +37,7 @@ export class GUI
 
 	static create ()
 	{
+		// Keyboard
 		document.body.addEventListener ("keydown", GUI.keyDown);
 		document.body.addEventListener ("keyup", GUI.keyUp);
 
@@ -75,7 +76,7 @@ export class GUI
 		GUI.canvas.addEventListener ("mouseup", GUI.mouseUp);
 		GUI.canvas.addEventListener ("mouseleave", GUI.mouseUp);
 		GUI.canvas.addEventListener ("mousemove", GUI.mouseMove);
-		GUI.canvas.addEventListener ("contextmenu", ContextMenu.open);
+		//GUI.canvas.addEventListener ("contextmenu", ContextMenu.open);
 
 		GUI.canvasRect = GUI.canvas.getBoundingClientRect ();
 		GUI.canvas.width = GUI.canvasRect.width;
