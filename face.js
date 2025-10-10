@@ -11,6 +11,11 @@ export class Face
 	static faces = [];
 	static currentFaces = [];
 
+	static color_border = "black";
+	static color_selected_border = "yellow";
+	static color_surface = "lightgray";
+	static color_selected_surface = "gray";
+
 	////////////////////////////////////
 	// STATIC METHODS: INITIALIZATION //
 	////////////////////////////////////
@@ -176,9 +181,10 @@ export class Face
 		this.nodes = nArray;
 
 		this.selected = false;
-		this.fillColor = "lightgray";
-		this.borderColor = "black";
 		this.deprecated = false;
+
+		this.fillColor = Face.color_surface;
+		this.borderColor = Face.color_border;
 
 		const l = this.nodes.length;
 
@@ -315,11 +321,11 @@ export class Face
 
 			Face.currentFaces.push (this);
 			this.selected = true;
-			this.fillColor = "gray";
+			this.fillColor = Face.color_selected_surface;
 
-			if (this.nodes.length == 2)
+			if (this.isLine ())
 			{
-				this.borderColor = "yellow";
+				this.borderColor = Face.color_selected_border;
 			}
 
 			console.log ("Face " + this.id + " selected");
@@ -336,8 +342,8 @@ export class Face
 	unselect ()
 	{
 		this.selected = false;
-		this.fillColor = "lightgray";
-		this.borderColor = "black";
+		this.fillColor = Face.color_surface;
+		this.borderColor = Face.color_border;
 	}
 
 	isSelected ()

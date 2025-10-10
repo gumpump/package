@@ -30,6 +30,10 @@ export class Node
 	// Only showing, not selecting
 	static show = false;
 
+	// Defined colors for every node
+	static color_default = "blue";
+	static color_selected = "yellow";
+
 	////////////////////////////////////
 	// STATIC METHODS: INITIALIZATION //
 	////////////////////////////////////
@@ -284,7 +288,7 @@ export class Node
 		return (Node.currentNodes.length > 0) ? true : false;
 	}
 
-	// Get the numer of currently selected nodes
+	// Get the number of currently selected nodes
 	static getNumSelected ()
 	{
 		return Node.currentNodes.length;
@@ -348,9 +352,6 @@ export class Node
 		this.selected = false;
 
 		this.connected = connected;
-
-		// Color to use when the node is drawn
-		this.color = "yellow";
 
 		// Own unique id (should be unique)
 		this.id = Node.idCounter++;
@@ -624,12 +625,12 @@ export class Node
 
 		if (this.selected == true)
 		{
-			Node.context.fillStyle = this.color;
+			Node.context.fillStyle = Node.color_selected;
 		}
 
 		else
 		{
-			Node.context.fillStyle = "blue";
+			Node.context.fillStyle = Node.color_default;
 		}
 
 		Node.context.fill ();
