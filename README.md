@@ -6,6 +6,8 @@ At first I wanted to use C, but with it I would have to build the GUI with an ad
 **Update:**
 You can use Bun.js with build.tsx to bundle it and link it in an html file. The only thing that needed an active server was the fact, that modern browser don't let JavaScript include modules if they are coming from your local storage. In the future I want to add some kind of build script so you don't have to study to run this thing.
 
+`bun run build.tsx`
+
 ## Existing features
 
  - Creating rectangles
