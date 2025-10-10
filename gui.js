@@ -22,9 +22,6 @@ export class GUI
 	static canvasRect = null;
 	static ctx = null;
 
-	// Helper
-	static drag = "o";
-
 	// General infos
 	static status = null;
 
@@ -32,8 +29,10 @@ export class GUI
 	static debugNodes = null;
 	static debugFaces = null;
 
-	static debugCurrentNodes = null;
+	static debugSelectedNodes = null;
 	static debugCurrentFaces = null;
+
+	static debugMovingNodes = null;
 
 	static create ()
 	{
@@ -95,11 +94,14 @@ export class GUI
 		GUI.debugFaces = document.getElementById ("navbar-message_faces");
 		GUI.debugFaces.innerText = Face.getNumFaces().toString ();
 
-		GUI.debugCurrentNodes = document.getElementById ("navbar-message_current_nodes");
-		GUI.debugCurrentNodes.innerText = Node.getNumSelected().toString ();
+		GUI.debugSelectedNodes = document.getElementById ("navbar-message_current_nodes");
+		GUI.debugSelectedNodes.innerText = Node.getNumSelected().toString ();
 
 		GUI.debugCurrentFaces = document.getElementById ("navbar-message_current_faces");
 		GUI.debugCurrentFaces.innerText = Face.getNumSelected().toString ();
+
+		GUI.debugMovingNodes = document.getElementById ("navbar-message_moving_nodes");
+		GUI.debugMovingNodes.innerText = Node.getNumMoving().toString ();
 
 		GUI.status = document.getElementById ("Multi");
 		GUI.status.innerText = "Single select";
@@ -120,8 +122,9 @@ export class GUI
 		// Debug infos
 		GUI.debugNodes.innerText = Node.getNumNodes().toString ();
 		GUI.debugFaces.innerText = Face.getNumFaces().toString ();
-		GUI.debugCurrentNodes.innerText = Node.getNumSelected().toString ();
+		GUI.debugSelectedNodes.innerText = Node.getNumSelected().toString ();
 		GUI.debugCurrentFaces.innerText = Face.getNumSelected().toString ();
+		GUI.debugMovingNodes.innerText = Node.getNumMoving().toString ();
 	}
 
 	// Event handler
@@ -186,7 +189,7 @@ export class GUI
 					continue;
 				}
 
-				GUI.drag = "n";
+				GUI.drag = true;
 
 				return;
 			}
@@ -203,7 +206,7 @@ export class GUI
 				{
 					if (f[i].intersect (event.offsetX, event.offsetY) == true)
 					{
-						GUI.drag = "f";
+						GUI.drag = true;
 
 						return;
 					}
@@ -212,7 +215,7 @@ export class GUI
 		}
 
 		//Node.showAll ();
-		GUI.drag = "o";
+		GUI.drag = false;
 	}
 
 	static mouseUp (event)
@@ -225,51 +228,29 @@ export class GUI
 			Node.hideAll ();
 		}
 
-		GUI.drag = "o";
+		GUI.drag = false;
 
 		Manager.update ();
 	}
 
 	static mouseMove (event)
 	{
-		switch (GUI.drag)
+		if (GUI.drag == false)
 		{
-			case "o":
+			return;
+		}
+
+		const n = Node.getMoving ();
+		const l = n.length;
+
+		if (l > 0)
+		{
+			for (var i = 0; i < l; i++)
 			{
-				return;
-			} break;
+				n[i].setRelPos (event.movementX, event.movementY);
+			}
 
-			case "n":
-			{
-				const n = Node.getSelected ();
-				var l = n.length;
-
-				if (l > 0)
-				{
-					for (var i = 0; i < l; i++)
-					{
-						n[i].setRelPos (event.movementX, event.movementY);
-					}
-
-					return;
-				}
-			} break;
-
-			case "f":
-			{
-				const f = Face.getSelected ();
-				l = f.length;
-
-				if (l > 0)
-				{
-					for (var i = 0; i < l; i++)
-					{
-						f[i].setRelPos (event.movementX, event.movementY);
-					}
-
-					return;
-				}
-			} break;
+			return;
 		}
 	}
 }

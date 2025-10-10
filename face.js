@@ -203,6 +203,11 @@ export class Face
 		}
 	}
 
+	getNodes ()
+	{
+		return this.nodes;
+	}
+
 	setRelPos (x, y)
 	{
 		for (var i = 0; i < this.nodes.length; i++)
@@ -323,6 +328,13 @@ export class Face
 			this.selected = true;
 			this.fillColor = Face.color_selected_surface;
 
+			const l = this.nodes.length;
+
+			for (var i = 0; i < l; i++)
+			{
+				this.nodes[i].move ();
+			}
+
 			if (this.isLine ())
 			{
 				this.borderColor = Face.color_selected_border;
@@ -344,6 +356,13 @@ export class Face
 		this.selected = false;
 		this.fillColor = Face.color_surface;
 		this.borderColor = Face.color_border;
+
+		const l = this.nodes.length;
+
+		for (var i = 0; i < l; i++)
+		{
+			this.nodes[i].unmove ();
+		}
 	}
 
 	isSelected ()

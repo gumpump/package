@@ -24,7 +24,10 @@ export class Node
 	static coordinateSystem = [];
 
 	// Currently selected nodes
-	static currentNodes = [];
+	static selectedNodes = [];
+
+	// Currently moving nodes
+	static movingNodes = [];
 
 	// Show all nodes
 	// Only showing, not selecting
@@ -147,17 +150,32 @@ export class Node
 	// Unselect the current node
 	static unselect ()
 	{
-		const l = Node.currentNodes.length;
+		const l = Node.selectedNodes.length;
 
 		if (l > 0)
 		{
 			for (var i = 0; i < l; i++)
 			{
-				Node.currentNodes[i].unselect ();
+				Node.selectedNodes[i].unselect ();
 			}
 		}
 
-		Node.currentNodes = [];
+		Node.selectedNodes = [];
+	}
+
+	static unmove ()
+	{
+		const l = Node.movingNodes.length;
+
+		if (l > 0)
+		{
+			for (var i = 0; i < l; i++)
+			{
+				Node.movingNodes[i].unmove ();
+			}
+		}
+
+		Node.movingNodes = [];
 	}
 
 	// Draw all nodes
@@ -253,7 +271,12 @@ export class Node
 	// Get the currently selected node (if there is one)
 	static getSelected ()
 	{
-		return Node.currentNodes;
+		return Node.selectedNodes;
+	}
+
+	static getMoving ()
+	{
+		return Node.movingNodes;
 	}
 
 	///////////////////////////////////////////
@@ -285,13 +308,23 @@ export class Node
 	// Is any node selected?
 	static isSelected ()
 	{
-		return (Node.currentNodes.length > 0) ? true : false;
+		return (Node.selectedNodes.length > 0) ? true : false;
 	}
 
 	// Get the number of currently selected nodes
 	static getNumSelected ()
 	{
-		return Node.currentNodes.length;
+		return Node.selectedNodes.length;
+	}
+
+	static isMoving ()
+	{
+		return (Node.movingNodes.length > 0) ? true : false;
+	}
+
+	static getNumMoving ()
+	{
+		return Node.movingNodes.length;
 	}
 
 	static getDistance (n1X, n1Y, n2X, n2Y)
@@ -351,6 +384,9 @@ export class Node
 		// Is the node selected?
 		this.selected = false;
 
+		// Is the node moving?
+		this.moving = false;
+
 		this.connected = connected;
 
 		// Own unique id (should be unique)
@@ -375,7 +411,7 @@ export class Node
 				Node.unselect ();
 			}
 
-			Node.currentNodes.push (this);
+			Node.selectedNodes.push (this);
 			this.selected = true;
 
 			console.log ("Node " + this.id + " selected");
@@ -383,8 +419,6 @@ export class Node
 
 		else
 		{
-			const i = Node.currentNodes.indexOf (this);
-			Node.currentNodes.splice (i, 1);
 			this.unselect ();
 		}
 	}
@@ -392,8 +426,29 @@ export class Node
 	// Unselect this node
 	unselect ()
 	{
+		const i = Node.selectedNodes.indexOf (this);
+		Node.selectedNodes.splice (i, 1);
 		this.selected = false;
 		console.log ("Node " + this.id + " unselected");
+	}
+
+	move ()
+	{
+		if (this.moving == false)
+		{
+			Node.movingNodes.push (this);
+			this.moving = true;
+			console.log ("Node " + this.id + " moving");
+		}
+	}
+
+	// I couldn't come up with a better name
+	unmove ()
+	{
+		const i = Node.movingNodes.indexOf (this);
+		Node.movingNodes.splice (i, 1);
+		this.moving = false;
+		console.log ("Node " + this.id + " not moving");
 	}
 
 	// Set new position
