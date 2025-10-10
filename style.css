@@ -10,6 +10,7 @@
 body
 {
     margin: 0;
+    height: 100vh;
 }
 
 p.sidebar-message_debug
@@ -26,10 +27,15 @@ p.sidebar-message_debug
     padding: 5px;
 }
 
+div#case
+{
+    height: 100%;
+}
+
 nav
 {
     width: 100vw;
-    height: 10%;
+    height: calc(10% - var(--frame-size-border));
     border-bottom: var(--frame-size-border) solid var(--frame-color-border);
     background-color: var(--frame-background-color);
 }
@@ -61,7 +67,6 @@ div#screen
 div#sidebar_left
 {
     width: calc(7% - var(--frame-size-border));
-    height: 100%;
     border-right: var(--frame-size-border) solid var(--frame-color-border);
     background-color: var(--frame-background-color);
 }
@@ -80,7 +85,6 @@ canvas
 div#sidebar_right
 {
     width: calc(13% - var(--frame-size-border));
-    height: 100%;
     border-left: var(--frame-size-border) solid var(--frame-color-border);
     background-color: var(--frame-background-color);
 }
